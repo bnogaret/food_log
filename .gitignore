@@ -1,8 +1,11 @@
 # Inspired by https://github.com/github/gitignore/blob/master/Python.gitignore
 
 # Python stuff
-__pycache__/
+__pycache__
 *.py[cod]
 
+# Jupyter stuff
+.ipynb_checkpoints
+
 # Data for the project
-/data/**
+data
