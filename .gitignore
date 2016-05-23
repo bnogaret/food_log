@@ -1,0 +1,8 @@
+# Inspired by https://github.com/github/gitignore/blob/master/Python.gitignore
+
+# Python stuff
+__pycache__/
+*.py[cod]
+
+# Data for the project
+/data/**
