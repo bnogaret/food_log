@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def get_sub_image_from_rectangle(image, rectangle, copy=False):
     """
     Return the sub-array of the image that is included inside the rectangle.

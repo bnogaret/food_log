@@ -1,6 +1,9 @@
 import os
 
+import numpy as np
+import matplotlib.pyplot as plt
 from skimage.transform import resize
+
 
 def read_bb_info_txt(path, d):
     """
@@ -26,7 +29,8 @@ def read_bb_info_txt(path, d):
                 d[data[0]].append([int(i) for i in data[1:]])
             else:
                 d[data[0]] = [[int(i) for i in data[1:]]]
-                
+
+
 def get_coordinate_resized_rectangles(base_shape, resized_shape, rectangles):
     """
     Update the rectangle's coordinates according to the resize of the image (points representing the rectangle).
@@ -53,3 +57,39 @@ def get_coordinate_resized_rectangles(base_shape, resized_shape, rectangles):
                 int(rectangle[3] * y_scale)
                 ])
     return resized_rectangles
+
+
+def plot_confusion_matrix(confusion_matrix, target_names, normalization=True, title='Confusion matrix', cmap=plt.cm.OrRd):
+    """
+    Plot the confusion matrix.
+    
+    Parameters
+    ----------
+    confusion matrix: 2D array (M * M)
+    target_names: name of each element of the matrix
+    normalization: normalization of the confusion matrix to get value in [0, 1] for each line
+    titel: title of the plot
+    cmap: color map of the confusion matrix
+    
+    References
+    ----------
+    http://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html#example-model-selection-plot-confusion-matrix-py
+    """
+    if normalization:
+        # Normalize the confusion matrix by row
+        # (i.e by the number of samples in each class)
+        cm = confusion_matrix.astype('float') / confusion_matrix.sum(axis=1)[:, np.newaxis]
+    else:
+        cm = confusion_matrix
+    print("Confusion matrix")
+    print(cm)
+    plt.figure()
+    plt.imshow(cm, interpolation='nearest', cmap=cmap)
+    plt.title(title)
+    plt.colorbar()
+    tick_marks = np.arange(len(target_names))
+    plt.xticks(tick_marks, target_names, rotation=45)
+    plt.yticks(tick_marks, target_names)
+    plt.tight_layout()
+    plt.ylabel('True label')
+    plt.xlabel('Predicted label')
