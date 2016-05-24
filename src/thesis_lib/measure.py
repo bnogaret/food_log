@@ -1,0 +1,25 @@
+from skimage.measure import moments, moments_central, moments_normalized, moments_hu
+
+
+def get_hu_moment_from_image(image):
+    """
+    Compute the Hu's moment from an image.
+    This set of moments is proofed to be translation, scale and rotation invariant.
+    See http://scikit-image.org/docs/dev/api/skimage.measure.html#skimage.measure.moments
+    
+    Parameter
+    ---------
+    image: a 2d array of double or uint8
+    
+    Return
+    ------
+    (7, 1) array
+    """
+    order = 7
+    raw_moments = moments(image, order=order)
+    cr = raw_moments[0, 1] / raw_moments[0, 0]
+    cc = raw_moments[1, 0] / raw_moments[0, 0]
+    central_moments = moments_central(image, cr, cc, order=order)
+    normalized_moments = moments_normalized(central_moments, order)
+    hu_moments = moments_hu(normalized_moments)
+    return hu_moments
