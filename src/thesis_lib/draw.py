@@ -3,7 +3,20 @@ from skimage.draw import polygon_perimeter, polygon
 
 def rectangle_perimeter(image, pt1, pt2, color=0, copy=False):
     """
-    Return a new image (deep copy of image with the rectangle).
+    Draw a rectangle on the image, using the representation with two points.
+    If copy is true, it return a deep copy, otherwise it modifies directly the parameter 'image'.
+    
+    Parameter
+    --------
+    image: 2D or 3D array
+    pt1: 2D coordinate of one of the corner
+    pt2: 2D coordinate of the opposite corner of pt1
+    color: integer used to draw the rectangle
+    copy: boolean
+    
+    Return
+    ------
+    2D array if copy is true
     """
     
     coor = np.array((
@@ -19,4 +32,3 @@ def rectangle_perimeter(image, pt1, pt2, color=0, copy=False):
         return copy
     else:
         image[rr, cc] = color
-        return image
