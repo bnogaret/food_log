@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from skimage.transform import resize
 
 
-def read_bb_info_txt(path, d):
+def read_bb_info_txt(path, d, verbose = False):
     """
     Read the bb_info.txt to get the rectangle coordinates.
     Add the coordinates of the rectangles into the dictionnary d.
@@ -25,7 +25,8 @@ def read_bb_info_txt(path, d):
             # print(line)
             data = line.split()
             if data[0] in d:
-                print("Multiple image for {}".format(data[0]))
+                if verbose:
+                    print("Multiple image for {}".format(data[0]))
                 d[data[0]].append([int(i) for i in data[1:]])
             else:
                 d[data[0]] = [[int(i) for i in data[1:]]]
