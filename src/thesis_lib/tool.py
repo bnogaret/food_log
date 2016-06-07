@@ -32,34 +32,6 @@ def read_bb_info_txt(path, d, verbose = False):
                 d[data[0]] = [[int(i) for i in data[1:]]]
 
 
-def get_coordinate_resized_rectangles(base_shape, resized_shape, rectangles):
-    """
-    Update the rectangle's coordinates according to the resize of the image (points representing the rectangle).
-    
-    Parameter
-    ---------
-    base_shape: size of the picture (array-like of 2 elements)
-    resized_shape: new size of the picture (array-like of 2 elements)
-    rectangles: list of rectangle coordinates
-        (rectangle coordinate = array of [x_0, y_0, x_1, y_1] with x and y of opposite size).
-    
-    Return:
-    -------
-    list of arrays
-    """
-    x_scale = resized_shape[0]/base_shape[1]
-    y_scale = resized_shape[1]/base_shape[0]
-    resized_rectangles = []
-    for rectangle in rectangles:
-        resized_rectangles.append([
-                int(rectangle[0] * x_scale),
-                int(rectangle[1] * y_scale),
-                int(rectangle[2] * x_scale), 
-                int(rectangle[3] * y_scale)
-                ])
-    return resized_rectangles
-
-
 def plot_confusion_matrix(confusion_matrix, target_names, normalization=True, title='Confusion matrix', cmap=plt.cm.OrRd):
     """
     Plot the confusion matrix.
