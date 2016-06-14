@@ -5,31 +5,34 @@ import matplotlib.pyplot as plt
 from skimage.transform import resize
 
 
-def read_bb_info_txt(path, d, verbose = False):
+def read_bb_info_txt(path, array):
     """
-    Read the bb_info.txt to get the rectangle coordinates.
-    Add the coordinates of the rectangles into the dictionnary d.
-    The name of the file is used as the key, the value is a list of 4 integers separated by a space:
-    - first and second value: coordinate of one of the corner
-    - third and forth value: coordinate of the opposte corner
+    Read the bb_info.txt to get the rectangle coordinates and its class.
+    Append this information into the list 'array' (thus, the array is obviously 
+    MODIFIED).
+    
+    The structure of the appending value is:
+    - first column (int): the image id (file name without jpg)
+    - second (int) and third columns (int): coordinate of one of the corner
+    - fourth (int) and fifth columns (int): coordinate of the opposte corner
+    - sixth column (int): label / class of the bbox (directory name)
     
     Parameter
     ---------
     path: path to the file bb_info.txt file.
-    d: dictionnary storing the rectangle coordinates
+    array: list to append the different bounding boxes
     """
+    # Get the label from the path (name of the directory containing the file)
     label = os.path.split(os.path.dirname(path))[1]
+
     with open(path, 'r') as f:
-        f.readline() # skip the first line
+        f.readline() # skip the first line that have the column names
         for line in f:
             # print(line)
-            data = line.split()
-            if data[0] in d:
-                if verbose:
-                    print("Multiple image for {}".format(data[0]))
-                d[data[0]].append([int(i) for i in data[1:]])
-            else:
-                d[data[0]] = [[int(i) for i in data[1:]]]
+            split_line = line.split()
+            
+            split_line.append(label)
+            array.append([int(i) for i in split_line])
 
 
 def plot_confusion_matrix(confusion_matrix, target_names, normalization=True, title='Confusion matrix', cmap=plt.cm.OrRd):
