@@ -61,7 +61,7 @@ def get_overlap_ratio_bbox(bbox1, bbox2):
     return intersection / union
 
 
-def get_precision_recall_bbox(ground_truth_bbox, predicted_bbox, threshold=0.5):
+def get_accuracy_bbox(ground_truth_bbox, predicted_bbox, threshold=0.5):
     """
     Compute the accuracy, precision and recall of the object detection of an 
     image using the overlap (or intersection over union) metric (as defined in 
