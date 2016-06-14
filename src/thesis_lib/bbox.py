@@ -63,34 +63,44 @@ def get_overlap_ratio_bbox(bbox1, bbox2):
 
 def get_precision_recall_bbox(ground_truth_bbox, predicted_bbox, threshold=0.5):
     """
-    Compute the recall and precision of the detection for an image.
-    It takes the list of predicted and ground truth bounding boxes to compute this two measures.
-    It may count several predicted bounding boxes as correct.
+    Compute the accuracy, precision and recall of the object detection of an 
+    image using the overlap (or intersection over union) metric (as defined in 
+    "The PASCAL Visual Object Classes Challenge 2012").
+    It takes the list of predicted and ground truth bounding boxes to compute 
+    this three measures.
+    
+    WARNING: It may count several predicted bounding boxes as correct.
     
     Parameters
     ----------
-    ground_truth_bbox: list of arrays of 4 elements
-    predicted_bbox: list of arrays of 4 elements
-    threshold: ratio of area overlap to be considered as correct detection
+    ground_truth_bbox: list of arrays of 4 int elements
+    predicted_bbox: list of arrays of 4 int elements
+    threshold (float): ratio of area overlap to be considered as correct detection
     
     Return
     ------
-    precision, recall: two floats numbers
+    accuracy, precision, recall: three floats numbers
+    
+    Reference
+    ---------
+    https://en.wikipedia.org/wiki/Precision_and_recall
+    http://host.robots.ox.ac.uk/pascal/VOC/voc2012/devkit_doc.pdf
     """
     correct = 0
     for gt in ground_truth_bbox:
         for p in predicted_bbox:
             if (get_overlap_ratio_bbox(gt, p) > threshold):
                 correct += 1
-                # break
+    
+    accuracy = correct / (correct + len(predicted_bbox) - correct + len(ground_truth_bbox) - correct)
     precision = correct / len(predicted_bbox)
     recall = correct / len(ground_truth_bbox)
-    return precision, recall
+    return accuracy, precision, recall
 
 
-def non_maxima_suppression(boxes, overlapThresh=0.4):
+def non_maxima_suppression(boxes, confidence, overlapThresh=0.4):
     """
-    Delete redundant, overlapping bounding boxes, keeping the smallest box.
+    Delete redundant, overlapping bounding boxes, keeping the boxes with the strongest confidence.
     
     Parameters
     ----------
@@ -115,10 +125,16 @@ def non_maxima_suppression(boxes, overlapThresh=0.4):
     y2 = boxes[:, 3]
 
     # compute the area of the bounding boxes and sort the bounding
-    # boxes by the bottom-right y-coordinate of the bounding box
+    # boxes by the bottom-right y-coordinate of the bounding box / confidence score
     area = (x2 - x1 + 1) * (y2 - y1 + 1)
     # idxs = np.argsort(y2)
-    idxs = np.argsort(y2)[::-1]
+    """
+    if confidence is None:
+        idxs = np.argsort(x1)#[::-1]
+    else:
+        idxs = np.argsort(confidence)
+    """
+    idxs = np.argsort(confidence)
 
     # keep looping while some indexes still remain in the indexes
     # list
