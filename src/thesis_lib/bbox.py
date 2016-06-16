@@ -54,7 +54,7 @@ def get_area_bbox(bbox):
     
 def get_overlap_ratio_bbox(bbox1, bbox2):
     """
-    Compute the overlap ratio of two bounding boxes (intersection / union)
+    Compute the overlap ratio of two bounding boxes (intersection over union).
     """
     intersection = get_intersection_bbox(bbox1, bbox2)
     union = get_area_bbox(bbox1) + get_area_bbox(bbox2) - intersection
