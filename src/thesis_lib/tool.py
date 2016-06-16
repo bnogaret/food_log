@@ -35,14 +35,15 @@ def read_bb_info_txt(path, array):
             array.append([int(i) for i in split_line])
 
 
-def plot_confusion_matrix(confusion_matrix, target_names, normalization=True, title='Confusion matrix', cmap=plt.cm.OrRd):
+def display_confusion_matrix(confusion_matrix, target_names=None, fname=None, normalization=True, title='Confusion matrix', cmap=plt.cm.OrRd):
     """
-    Plot the confusion matrix.
+    Display the confusion matrix (either save to a file or show).
     
     Parameters
     ----------
     confusion matrix: 2D array (M * M)
-    target_names: name of each element of the matrix
+    target_names: name of each element of the matrix. If it is None, it doesn't display the name.
+    path: string containing a path to a filename. If it's None, it display the image.
     normalization: normalization of the confusion matrix to get value in [0, 1] for each line
     titel: title of the plot
     cmap: color map of the confusion matrix
@@ -60,12 +61,17 @@ def plot_confusion_matrix(confusion_matrix, target_names, normalization=True, ti
     print("Confusion matrix")
     print(cm)
     plt.figure()
-    plt.imshow(cm, interpolation='nearest', cmap=cmap)
     plt.title(title)
+    plt.matshow(cm, cmap=cmap, interpolation='nearest')
     plt.colorbar()
-    tick_marks = np.arange(len(target_names))
-    plt.xticks(tick_marks, target_names, rotation=45)
-    plt.yticks(tick_marks, target_names)
-    plt.tight_layout()
+    if target_names is not None:
+        tick_marks = np.arange(len(target_names))
+        plt.xticks(tick_marks, target_names, rotation=45)
+        plt.yticks(tick_marks, target_names)
+        plt.tight_layout()
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
+    if fname is not None:
+        plt.savefig(fname)
+    else:
+        plt.show()
