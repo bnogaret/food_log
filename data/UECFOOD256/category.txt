@@ -1,15 +1,15 @@
 id	name                                                category
 1	rice                                                grain
-2	eels on rice                                        grain, protein
+2	eels on rice                                        grain,protein
 3	pilaf                                               grain
-4	chicken and egg on rice                             grain, protein
-5	pork cutlet on rice                                 grain, protein
+4	chicken and egg on rice                             grain,protein
+5	pork cutlet on rice                                 grain,protein
 6	beef curry                                          protein
 7	sushi                                               grain
-8	chicken rice                                        grain, protein
+8	chicken rice                                        grain,protein
 9	fried rice                                          grain
 10	tempura bowl                                        grain
-11	bibimbap                                            grain, vegetable
+11	bibimbap                                            grain,vegetable
 12	toast                                               grain
 13	croissant                                           grain
 14	roll bread                                          grain
@@ -19,10 +19,10 @@ id	name                                                category
 18	pizza                                               grain
 19	sandwiches                                          grain
 20	udon noodle                                         grain
-21	tempura udon                                        grain, protein, vegetable
+21	tempura udon                                        grain,protein,vegetable
 22	soba noodle                                         grain
-23	ramen noodle                                        grain, protein
-24	beef noodle                                         grain, protein
+23	ramen noodle                                        grain,protein
+24	beef noodle                                         grain,protein
 25	tensin noodle                                       grain
 26	fried noodle                                        grain
 27	spaghetti                                           grain
@@ -37,34 +37,34 @@ id	name                                                category
 36	miso soup                                           vegetable
 37	potage                                              vegetable
 38	sausage                                             protein
-39	oden                                                protein, 
+39	oden                                                protein
 40	omelet                                              protein
-41	ganmodoki                                           grain, protein, vegetable
+41	ganmodoki                                           grain,protein,vegetable
 42	jiaozi                                              grain
-43	stew                                                protein, vegetable
+43	stew                                                protein,vegetable
 44	teriyaki grilled fish                               protein
 45	fried fish                                          protein
 46	grilled salmon                                      protein
 47	salmon meuniere                                     protein
 48	sashimi                                             protein
 49	grilled pacific saury                               protein
-50	sukiyaki                                            protein, vegetable
-51	sweet and sour pork                                 protein, vegetable
+50	sukiyaki                                            protein,vegetable
+51	sweet and sour pork                                 protein,vegetable
 52	lightly roasted fish                                protein
-53	steamed egg hotchpotch                              protein, vegetable
+53	steamed egg hotchpotch                              protein,vegetable
 54	tempura                                             protein
 55	fried chicken                                       protein
 56	sirloin cutlet                                      protein
 57	nanbanzuke                                          protein
 58	boiled fish                                         protein
-59	seasoned beef with potatoes                         protein, vegetable
+59	seasoned beef with potatoes                         protein,vegetable
 60	hambarg steak                                       protein
 61	steak                                               protein
 62	dried fish                                          protein
 63	ginger pork saute                                   protein
 64	spicy chili-flavored tofu                           protein
 65	yakitori                                            protein
-66	cabbage roll                                        grain, protein
+66	cabbage roll                                        grain,protein
 67	omelet                                              protein
 68	egg sunny-side up                                   protein
 69	natto                                               vegetable
@@ -73,63 +73,63 @@ id	name                                                category
 72	chilled noodle                                      grain
 73	stir-fried beef and peppers                         protein
 74	simmered pork                                       protein
-75	boiled chicken and vegetables                       protein, vegetable
+75	boiled chicken and vegetables                       protein,vegetable
 76	sashimi bowl                                        protein
 77	sushi bowl                                          grain
-78	fish-shaped pancake with bean jam                   grain, protein
+78	fish-shaped pancake with bean jam                   grain,protein
 79	shrimp with chill source                            protein
 80	roast chicken                                       protein
 81	steamed meat dumpling                               protein
-82	omelet with fried rice                              grain, protein
-83	cutlet curry                                        grain, protein
-84	spaghetti meat sauce                                grain, protein
+82	omelet with fried rice                              grain,protein
+83	cutlet curry                                        grain,protein
+84	spaghetti meat sauce                                grain,protein
 85	fried shrimp                                        protein
 86	potato salad                                        vegetable
 87	green salad                                         vegetable
 88	macaroni salad                                      grain
-89	Japanese tofu and vegetable chowder                 protein, vegetable
-90	pork miso soup                                      protein, vegetable
-91	chinese soup                                        grain, vegetable
+89	Japanese tofu and vegetable chowder                 protein,vegetable
+90	pork miso soup                                      protein,vegetable
+91	chinese soup                                        grain,vegetable
 92	beef bowl                                           protein
 93	kinpira-style sauteed burdock                       protein
 94	rice ball                                           grain
 95	pizza toast                                         grain
 96	dipping noodles                                     grain
-97	hot dog                                             grain, protein
+97	hot dog                                             grain,protein
 98	french fries                                        vegetable
 99	mixed rice                                          grain
-100	goya chanpuru                                       protein, vegetable
-101	green curry                                         grain, vegetable
-102	okinawa soba                                        grain, protein
+100	goya chanpuru                                       protein,vegetable
+101	green curry                                         grain,vegetable
+102	okinawa soba                                        grain,protein
 103	mango pudding                                       fruit
 104	almond jelly                                        protein
-105	jjigae                                              protein, vegetable
-106	dak galbi                                           protein, vegetable
-107	dry curry                                           grain, vegetable
+105	jjigae                                              protein,vegetable
+106	dak galbi                                           protein,vegetable
+107	dry curry                                           grain,vegetable
 108	kamameshi                                           grain
 109	rice vermicelli                                     grain
-110	paella                                              grain, protein
-111	tanmen                                              grain, vegetable
-112	kushikatu                                           protein, vegetable
-113	yellow curry                                        protein, grain
+110	paella                                              grain,protein
+111	tanmen                                              grain,vegetable
+112	kushikatu                                           protein,vegetable
+113	yellow curry                                        protein,grain
 114	pancake                                             grain
-115	champon                                             grain, vegetable
+115	champon                                             grain,vegetable
 116	crape                                               grain
 117	tiramisu                                            grain
 118	waffle                                              grain
-119	rare cheese cake                                    dairy, grain
+119	rare cheese cake                                    dairy,grain
 120	shortcake                                           grain
-121	chop suey                                           protein, vegetable
+121	chop suey                                           protein,vegetable
 122	twice cooked pork                                   protein
 123	mushroom risotto                                    vegetable
 124	namul                                               vegetable
 125	zoni                                                grain
 126	french toast                                        grain
 127	fine white noodles                                  grain
-128	minestrone                                          grain, vegetable
-129	pot au feu                                          protein, vegetable
+128	minestrone                                          grain,vegetable
+129	pot au feu                                          protein,vegetable
 130	chicken nugget                                      protein
-131	namero                                              protein, vegetable
+131	namero                                              protein,vegetable
 132	french bread                                        grain
 133	rice gruel                                          grain
 134	broiled eel bowl                                    protein
@@ -146,12 +146,12 @@ id	name                                                category
 145	bagel                                               grain
 146	scone                                               grain
 147	tortilla                                            grain
-148	tacos                                               grain, protein, vegetable
-149	nachos                                              protein, vegetable
-150	meatloaf                                            grain, protein
+148	tacos                                               grain,protein,vegetable
+149	nachos                                              protein,vegetable
+150	meatloaf                                            grain,protein
 151	scrambled egg                                       protein
 152	rice gratin                                         grain
-153	lasagna                                             grain, protein
+153	lasagna                                             grain,protein
 154	Caesar salad                                        vegetable
 155	oatmeal                                             grain
 156	fried pork dumplings served in soup                 protein
@@ -160,98 +160,98 @@ id	name                                                category
 159	popcorn                                             grain
 160	cream puff                                          grain
 161	doughnut                                            grain
-162	apple pie                                           grain, fruit
+162	apple pie                                           grain,fruit
 163	parfait                                             grain
 164	fried pork in scoop                                 protein
 165	lamb kebabs                                         protein
 166	stir-fried potato and eggplant and green pepper     vegetable
 167	roast duck                                          protein
-168	hot pot                                             protein, vegetable
+168	hot pot                                             protein,vegetable
 169	pork belly                                          protein
 170	xiao long bao                                       grain
 171	moon cake                                           grain
 172	custard tart                                        grain
-173	beef noodle soup                                    grain, protein
+173	beef noodle soup                                    grain,protein
 174	pork cutlet                                         protein
-175	minced pork rice                                    grain, protein
+175	minced pork rice                                    grain,protein
 176	fish ball soup                                      protein
 177	oyster omelette                                     protein
 178	glutinous oil rice                                  grain
-179	turnip pudding                                      grain, vegetable
+179	turnip pudding                                      grain,vegetable
 180	stinky tofu                                         protein
 181	lemon fig jelly                                     fruit
 182	khao soi                                            grain
-183	Sour prawn soup                                     protein, vegetable
-184	Thai papaya salad                                   fruit, vegetable
-185	sliced Hainan-style chicken with marinated rice     grain, protein
-186	hot and sour with fish and vegetable ragout         protein, vegetable
+183	Sour prawn soup                                     protein,vegetable
+184	Thai papaya salad                                   fruit,vegetable
+185	sliced Hainan-style chicken with marinated rice     grain,protein
+186	hot and sour with fish and vegetable ragout         protein,vegetable
 187	stir-fried mixed vegetables                         vegetable
 188	beef in oyster sauce                                protein
 189	pork satay                                          protein
-190	spicy chicken salad                                 protein, vegetable
-191	noodles with fish curry                             grain, protein
-192	Pork Sticky Noodles                                 grain, protein
+190	spicy chicken salad                                 protein,vegetable
+191	noodles with fish curry                             grain,protein
+192	Pork Sticky Noodles                                 grain,protein
 193	Pork with lemon                                     protein
 194	stewed pork leg                                     protein
 195	charcoal-boiled pork neck                           protein
-196	fried mussel pancakes                               grain, protein
+196	fried mussel pancakes                               grain,protein
 197	Deep Fried Chicken Wing                             protein
-198	Barbecued red pork in sauce with rice               grain, protein
-199	Rice with roast duck                                grain, protein
-200	Rice crispy pork                                    grain, protein
-201	Wonton soup                                         grain, protein
+198	Barbecued red pork in sauce with rice               grain,protein
+199	Rice with roast duck                                grain,protein
+200	Rice crispy pork                                    grain,protein
+201	Wonton soup                                         grain,protein
 202	Chicken Rice Curry With Coconut                     protein
 203	Crispy Noodles                                      grain
-204	Egg Noodle In Chicken Yellow Curry                  grain, protein
+204	Egg Noodle In Chicken Yellow Curry                  grain,protein
 205	coconut milk soup                                   fruit
-206	pho                                                 grain, vegetable
-207	Hue beef rice vermicelli soup                       grain, protein
-208	Vermicelli noodles with snails                      grain, protein
+206	pho                                                 grain,vegetable
+207	Hue beef rice vermicelli soup                       grain,protein
+208	Vermicelli noodles with snails                      grain,protein
 209	Fried spring rolls                                  vegetable
 210	Steamed rice roll                                   grain
-211	Shrimp patties                                      grain, protein
-212	ball shaped bun with pork                           grain, protein                 
-213	Coconut milk-flavored crepes with shrimp and beef   grain, protein
+211	Shrimp patties                                      grain,protein
+212	ball shaped bun with pork                           grain,protein                 
+213	Coconut milk-flavored crepes with shrimp and beef   grain,protein
 214	Small steamed savory rice pancake                   grain
 215	Glutinous Rice Balls                                grain
-216	loco moco                                           grain, protein, vegetable
+216	loco moco                                           grain,protein,vegetable
 217	haupia                                              vegetable
 218	malasada                                            grain
-219	laulau                                              protein, vegetable
-220	spam musubi                                         protein, vegetable
-221	oxtail soup                                         protein, vegetable
-222	adobo                                               protein, vegetable
-223	lumpia                                              protein, vegetable
+219	laulau                                              protein,vegetable
+220	spam musubi                                         protein,vegetable
+221	oxtail soup                                         protein,vegetable
+222	adobo                                               protein,vegetable
+223	lumpia                                              protein,vegetable
 224	brownie                                             grain
 225	churro                                              grain
-226	jambalaya                                           protein, vegetable
-227	nasi goreng                                         grain, protein
-228	ayam goreng                                         grain, protein
+226	jambalaya                                           protein,vegetable
+227	nasi goreng                                         grain,protein
+228	ayam goreng                                         grain,protein
 229	ayam bakar                                          protein
-230	bubur ayam                                          grain, protein
-231	gulai                                               protain
+230	bubur ayam                                          grain,protein
+231	gulai                                               protein
 232	laksa                                               grain
-233	mie ayam                                            grain, protein
-234	mie goreng                                          grain, vegetable
-235	nasi campur                                         grain, vegetable
-236	nasi padang                                         grain, vegetable
-237	nasi uduk                                           grain, vegetable
+233	mie ayam                                            grain,protein
+234	mie goreng                                          grain,vegetable
+235	nasi campur                                         grain,vegetable
+236	nasi padang                                         grain,vegetable
+237	nasi uduk                                           grain,vegetable
 238	babi guling or pig roast                            protein
-239	kaya toast                                          grain, protein
+239	kaya toast                                          grain,protein
 240	bak kut teh                                         protein
 241	curry puff                                          grain
-242	chow mein                                           grain, vegetable
-243	zha jiang mian                                      grain, vegetable
-244	kung pao chicken                                    protein, vegetable
+242	chow mein                                           grain,vegetable
+243	zha jiang mian                                      grain,vegetable
+244	kung pao chicken                                    protein,vegetable
 245	crullers                                            grain
 246	eggplant with garlic sauce                          vegetable
-247	three cup chicken                                   protein, vegetable
+247	three cup chicken                                   protein,vegetable
 248	bean curd or tofu family style                      protein
 249	salt & pepper fried shrimp with shell               protein
 250	baked salmon                                        protein
-251	braised pork meat ball with napa cabbage            protein, vegetable
+251	braised pork meat ball with napa cabbage            protein,vegetable
 252	winter melon soup                                   fruit
 253	steamed spareribs                                   protein
-254	chinese pumpkin pie                                 grain, vegetable
-255	eight treasure rice                                 grain, vegetable
+254	chinese pumpkin pie                                 grain,vegetable
+255	eight treasure rice                                 grain,vegetable
 256	hot & sour soup                                     vegetable
