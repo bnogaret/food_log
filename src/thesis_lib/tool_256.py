@@ -4,6 +4,61 @@ Contains useful functions for the UEFCFOOD256 dataset.
 
 import os
 
+import pandas as pd
+
+
+def get_name_and_category(filename):
+    """
+    Return a dataframe containing the name and the global category for each
+    label of the UEFC-FOOD-256 dataset.
+    
+    The 5 possible categories are from ChooseMyPlate and are:
+    - fruit
+    - protein: meat, egg, 
+    - vegetable
+    - dairy
+    - grain
+    
+    Parameter
+    ---------
+    filename: string
+        path to the file containing the name and categories
+        (modified version of category.txt from the dataset).
+    
+    Return
+    ------
+    A dataframe with:
+    - _id: int
+        index, starting from 1, corresponding to the label
+    - _name: string
+        name of the label
+    - _category: category
+        one of the five possible for a food .
+    
+    Reference
+    ---------
+    https://en.wikipedia.org/wiki/Food_group
+    http://www.choosemyplate.gov/
+    """
+    df = pd.read_csv(filename,
+                     delimiter=r"\t|\s{2,}",
+                     header=0,
+                     names=["_id", "_name", "_category"],
+                     engine="python")
+    
+    df = df.set_index('_id')
+
+    df = df.drop('_category', axis=1) \
+           .join(df._category.str.split(',', expand=True) \
+                                 .stack().reset_index(drop=True, level=1) \
+                                 .rename('_category'))
+
+    df._category = df._category.astype("category",
+                                       categories=["grain", "vegetable", "protein", "dairy", "fruit"],
+                                       ordered=False)
+    
+    return df
+
 
 def read_bb_info_txt(path, array):
     """
