@@ -1,7 +1,10 @@
 import os
 import pickle as pk
 
-PATH_TO_SAVE = "../data/"
+
+PATH_CURRENT_DIRECTORY = os.path.dirname(__file__)
+PATH_TO_SAVE = os.path.join(PATH_CURRENT_DIRECTORY, "..", "../data/")
+
 
 def save_object(object_to_save, name_file, overwrite=False):
     '''
