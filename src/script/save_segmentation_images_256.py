@@ -11,7 +11,7 @@ from skimage.transform import resize
 
 import init_path
 
-from thesis_lib.draw import draw_bounding_boxes
+from thesis_lib.draw import draw_bounding_boxes, draw_arrays
 from thesis_lib.bbox import *
 from thesis_lib.cnn import *
 from thesis_lib.io import load_object
@@ -58,29 +58,6 @@ def find_image_path(image_id):
         return filename
 
 
-def vis_square(data, filename):
-    """
-    Take an array of shape (n, height, width) or (n, height, width, 3)
-    and visualize each (height, width) thing in a grid of size approx. sqrt(n) by sqrt(n)
-    """
-    
-    # normalize data for display
-    data = (data - data.min()) / (data.max() - data.min())
-    
-    # force the number of filters to be square
-    n = int(np.ceil(np.sqrt(data.shape[0])))
-    padding = (((0, n ** 2 - data.shape[0]),
-               (0, 1), (0, 1))                 # add some space between filters
-               + ((0, 0),) * (data.ndim - 3))  # don't pad the last dimension (if there is one)
-    data = np.pad(data, padding, mode='constant', constant_values=1)  # pad with ones (white)
-    
-    # tile the filters into an image
-    data = data.reshape((n, n) + data.shape[1:]).transpose((0, 2, 1, 3) + tuple(range(4, data.ndim + 1)))
-    data = data.reshape((n * data.shape[1], n * data.shape[3]) + data.shape[4:])
-    
-    plt.imsave(filename, data)
-
-
 def get_ground_truth_bbox(image_id, initial_image_size):
     # Load the pickle save dataframe containing 6 columns:
     # 'image_id' (int) : image name (exclusing the '.jpg')
@@ -110,7 +87,7 @@ def save_segmentation_image(image_id, threshold_net, threshold_overlap):
         raise Exception("Unknown image id provided")
     
     # In my case, I'm using the cpu. To change if a GPU is enable.
-    set_mode()
+    set_caffe_mode()
     
     cnn_bbox_coordinates = np.loadtxt(PATH_TO_BBOX, np.float, delimiter=',')
     
@@ -130,6 +107,13 @@ def save_segmentation_image(image_id, threshold_net, threshold_overlap):
     prob = output['prob'][0]
     print(prob)
     print(prob.shape)
+    
+    # Dipslay the output of the first layer (first 4 only)
+    feat = net.blobs['conv1/7x7_s2'].data[0, :4]
+    print(feat.shape)
+    draw_arrays(feat,
+                PATH_TO_IMAGE_DIR + "first_conv_layer_" + str(image_id) + ".jpg",
+                title="Visualisation of the first convolutional layer's output")
     
     # Select indices superior to a threshold
     predicted_index = np.where(prob > threshold_net)[0]
