@@ -10,11 +10,18 @@ def display_confusion_matrix(confusion_matrix, target_names=None, fname=None, no
     Parameters
     ----------
     confusion matrix: 2D array (M * M)
-    target_names: name of each element of the matrix. If it is None, it doesn't display the name.
-    path: string containing a path to a filename. If it's None, it display the image.
-    normalization: normalization of the confusion matrix to get value in [0, 1] for each line
-    titel: title of the plot
-    cmap: color map of the confusion matrix
+        Actual value of the confusion matrix
+    target_names: array-like of string, optional
+        Name of each element of the matrix. If it is None, it doesn't display the name.
+    fname: string, optional
+        It is the path to a filename. If it's None, it display the image.
+    normalize: bool, optional
+        Whether or not the function normalizes the data to get value in [0, 1] 
+        for each line.
+    titel: str, optional
+        Title of the plot
+    cmap: pyplot colormap, optional
+        Color map of the confusion matrix
     
     References
     ----------
