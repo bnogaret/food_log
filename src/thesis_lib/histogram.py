@@ -5,18 +5,18 @@ from skimage.feature import local_binary_pattern
 def color_histogram(image, bins=40, ranges=(0, 256), eps=1e-7, normalization=True):
     """
     Get the color histogram for each channel of the image
-    
+
     Parameters
     ----------
     image: 2D or 3D array
     bins: number of bins of the histogram
     range: range of value of the channel
     normalization: normalize the histogram (value in [0, 1])
-    
+
     Returns
     -------
     (bins * channel) numpy array
-        
+
     References
     ---------
     http://www.pyimagesearch.com/2014/01/22/clever-girl-a-guide-to-utilizing-color-histograms-for-computer-vision-and-image-search-engines/
@@ -41,27 +41,27 @@ def color_histogram(image, bins=40, ranges=(0, 256), eps=1e-7, normalization=Tru
         if normalization:
             hist = hist.astype("float")
             hist /= (hist.sum() + eps)
-        
+
         features.append(hist)
-    
+
     return np.array(features).flatten()
 
 
 def local_binary_pattern_histogram(image, numPoints=18, radius=8, eps=1e-7, normalization=True):
     """
-    Compute the local 
-    
+    Compute the local
+
     Parameters
     ----------
     image: 2D array (gray level)
     numPoints: Number of circularly symmetric neighbour set points (quantization of the angular space).
     radius: radius of circle used in the LBP algorithm
     normalization: normalize the histogram (value in [0, 1])
-    
-    Return
+
+    Returns
     -------
     Numpy array
-    
+
     References
     ----------
     http://www.pyimagesearch.com/2015/12/07/local-binary-patterns-with-python-opencv/

@@ -1,5 +1,5 @@
 """
-Contains useful functions for the UEFCFOOD256 dataset.
+Contains functions for that are only applicable for the UEFCFOOD256 dataset.
 """
 
 import os
@@ -11,22 +11,22 @@ def get_name_and_category(filename):
     """
     Return a dataframe containing the name and the global category for each
     label of the UEFC-FOOD-256 dataset.
-    
+
     The 5 possible categories are from ChooseMyPlate and are:
     - fruit
-    - protein: meat, egg, 
+    - protein: meat, egg,
     - vegetable
     - dairy
     - grain
-    
-    Parameter
-    ---------
+
+    Parameters
+    ----------
     filename: string
         path to the file containing the name and categories
         (modified version of category.txt from the dataset).
-    
-    Return
-    ------
+
+    Returns
+    -------
     A dataframe with:
     - _id: int
         index, starting from 1, corresponding to the label
@@ -34,9 +34,9 @@ def get_name_and_category(filename):
         name of the label
     - _category: category
         one of the five possible for a food .
-    
-    Reference
-    ---------
+
+    References
+    ----------
     https://en.wikipedia.org/wiki/Food_group
     http://www.choosemyplate.gov/
     """
@@ -45,7 +45,7 @@ def get_name_and_category(filename):
                      header=0,
                      names=["_id", "_name", "_category"],
                      engine="python")
-    
+
     df = df.set_index('_id')
 
     df = df.drop('_category', axis=1) \
@@ -56,24 +56,24 @@ def get_name_and_category(filename):
     df._category = df._category.astype("category",
                                        categories=["grain", "vegetable", "protein", "dairy", "fruit"],
                                        ordered=False)
-    
+
     return df
 
 
 def read_bb_info_txt(path, array):
     """
     Read the bb_info.txt to get the rectangle coordinates and its class.
-    Append this information into the list 'array' (thus, the array is obviously 
+    Append this information into the list 'array' (thus, the array is obviously
     MODIFIED).
-    
+
     The structure of the appending value is:
     - first column (int): the image id (file name without jpg)
     - second (int) and third columns (int): coordinate of one of the corner
     - fourth (int) and fifth columns (int): coordinate of the opposte corner
     - sixth column (int): label / class of the bbox (directory name)
-    
-    Parameter
-    ---------
+
+    Parameters
+    ----------
     path: path to the file bb_info.txt file.
     array: list to append the different bounding boxes
     """
@@ -85,6 +85,6 @@ def read_bb_info_txt(path, array):
         for line in f:
             # print(line)
             split_line = line.split()
-            
+
             split_line.append(label)
             array.append([int(i) for i in split_line])

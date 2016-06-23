@@ -7,15 +7,15 @@ import numpy as np
 def get_coordinate_resized_rectangles(base_shape, resized_shape, rectangles):
     """
     Update the rectangle's coordinates according to the resize of the image (points representing the rectangle).
-    
-    Parameter
+
+    Parameters
     ---------
     base_shape: size of the picture (array-like of 2 elements)
     resized_shape: new size of the picture (array-like of 2 elements)
     rectangles: list of rectangle coordinates
         (rectangle coordinate = array of [x_0, y_0, x_1, y_1] with x and y of opposite points).
-    
-    Return:
+
+    Returns
     -------
     list of arrays
     """
@@ -26,7 +26,7 @@ def get_coordinate_resized_rectangles(base_shape, resized_shape, rectangles):
         resized_rectangles.append([
                 int(rectangle[0] * x_scale),
                 int(rectangle[1] * y_scale),
-                int(rectangle[2] * x_scale), 
+                int(rectangle[2] * x_scale),
                 int(rectangle[3] * y_scale)
                 ])
     return resized_rectangles
@@ -35,7 +35,7 @@ def get_coordinate_resized_rectangles(base_shape, resized_shape, rectangles):
 def get_intersection_bbox(bbox1, bbox2):
     """
     Compute the intersection area between two bounding boxes / rectangles.
-    
+
     References
     ----------
     http://uk.mathworks.com/help/vision/ref/bboxoverlapratio.html
@@ -51,7 +51,7 @@ def get_area_bbox(bbox):
     """
     return (bbox[2] - bbox[0]) * (bbox[3] - bbox[1])
 
-    
+
 def get_overlap_ratio_bbox(bbox1, bbox2):
     """
     Compute the overlap ratio of two bounding boxes (intersection over union).
@@ -63,26 +63,26 @@ def get_overlap_ratio_bbox(bbox1, bbox2):
 
 def get_accuracy_bbox(ground_truth_bbox, predicted_bbox, threshold=0.5):
     """
-    Compute the accuracy, precision and recall of the object detection of an 
-    image using the overlap (or intersection over union) metric (as defined in 
+    Compute the accuracy, precision and recall of the object detection of an
+    image using the overlap (or intersection over union) metric (as defined in
     "The PASCAL Visual Object Classes Challenge 2012").
-    It takes the list of predicted and ground truth bounding boxes to compute 
+    It takes the list of predicted and ground truth bounding boxes to compute
     this three measures.
-    
+
     WARNING: It may count several predicted bounding boxes as correct.
-    
+
     Parameters
     ----------
     ground_truth_bbox: list of arrays of 4 int elements
     predicted_bbox: list of arrays of 4 int elements
     threshold (float): ratio of area overlap to be considered as correct detection
-    
-    Return
-    ------
+
+    Returns
+    -------
     accuracy, precision, recall: three floats numbers
-    
-    Reference
-    ---------
+
+    References
+    ----------
     https://en.wikipedia.org/wiki/Precision_and_recall
     http://host.robots.ox.ac.uk/pascal/VOC/voc2012/devkit_doc.pdf
     """
@@ -91,7 +91,7 @@ def get_accuracy_bbox(ground_truth_bbox, predicted_bbox, threshold=0.5):
         for p in predicted_bbox:
             if (get_overlap_ratio_bbox(gt, p) > threshold):
                 correct += 1
-    
+
     accuracy = correct / (correct + len(predicted_bbox) - correct + len(ground_truth_bbox) - correct)
     precision = correct / len(predicted_bbox)
     recall = correct / len(ground_truth_bbox)
@@ -101,23 +101,24 @@ def get_accuracy_bbox(ground_truth_bbox, predicted_bbox, threshold=0.5):
 def non_maxima_suppression(boxes, confidence, overlapThresh=0.4):
     """
     Delete redundant, overlapping bounding boxes, keeping the boxes with the strongest confidence.
-    
+
     Parameters
     ----------
     boxes: numpy array of bbox
     overlapThresh: typical value: between 0.3 and 0.5
-    
-    Return
+
+    Returns
     -------
-    Numpy array (int) of the remaining boxes
-    
+    Numpy array of int
+        The remaining boxes' coordinates
+
     References
     ----------
     http://www.pyimagesearch.com/2015/02/16/faster-non-maximum-suppression-python/
     """
-    # initialize the list of picked indexes	
+    # initialize the list of picked indexes
     pick = []
- 
+
     # grab the coordinates of the bounding boxes
     x1 = boxes[:, 0]
     y1 = boxes[:, 1]

@@ -5,15 +5,15 @@ def get_hu_moment_from_image(image):
     """
     Compute the 7 Hu's moments from an image.
     This set of moments is proofed to be translation, scale and rotation invariant.
-    
-    Parameter
-    ---------
+
+    Parameters
+    ----------
     image: a 2d array of double or uint8
-    
-    Return
-    ------
+
+    Returns
+    -------
     (7, 1) array of double
-    
+
     References
     ----------
     http://scikit-image.org/docs/dev/api/skimage.measure.html#skimage.measure.moments
