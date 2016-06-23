@@ -11,6 +11,7 @@ from thesis_lib.io import save_object
 
 PATH_CURRENT_DIRECTORY = os.path.dirname(__file__)
 PATH_TO_UECFOOD256 = os.path.join(PATH_CURRENT_DIRECTORY, "..", "../data/UECFOOD256/")
+PICKLE_FILENAME = "256_gt_bbox"
 
 
 def get_ground_truth_bbox():
@@ -35,5 +36,5 @@ def get_ground_truth_bbox():
 
 if __name__ == "__main__":
     df = get_ground_truth_bbox()
-    save_object(df, "256_gt_bbox", overwrite=True)
+    save_object(df, PICKLE_FILENAME, overwrite=True)
 

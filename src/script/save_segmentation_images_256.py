@@ -26,7 +26,7 @@ PATH_TO_SEGMENTATION_MODEL = CAFFE_ROOT + "/models/339fd0a938ed026692267a60b44c0
 
 PATH_TO_SEG_MODEL_DEF = PATH_TO_SEGMENTATION_MODEL + 'deploy.prototxt'
 PATH_TO_SEG_MODEL_WEIGHTS = PATH_TO_SEGMENTATION_MODEL + 'GoogleNet_SOD_finetune.caffemodel'
-PATH_TO_BBOX = PATH_TO_SEGMENTATION_MODEL + 'center100.txt'
+PATH_TO_NET_BBOX = PATH_TO_SEGMENTATION_MODEL + 'center100.txt'
 
 IMAGE_SIZE = (224, 224)
 MEAN_BGR_VALUE = np.asarray([103.939, 116.779, 123.68])
@@ -89,7 +89,7 @@ def save_segmentation_image(image_id, threshold_net, threshold_overlap):
     # In my case, I'm using the cpu. To change if a GPU is enable.
     set_caffe_mode()
     
-    cnn_bbox_coordinates = np.loadtxt(PATH_TO_BBOX, np.float, delimiter=',')
+    cnn_bbox_coordinates = np.loadtxt(PATH_TO_NET_BBOX, np.float, delimiter=',')
     
     net = get_trained_network(PATH_TO_SEG_MODEL_DEF, PATH_TO_SEG_MODEL_WEIGHTS, IMAGE_SIZE)
     
