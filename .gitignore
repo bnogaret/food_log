@@ -12,3 +12,6 @@ data
 
 # Build directory
 build
+
+# Documentation
+docs/_build/
