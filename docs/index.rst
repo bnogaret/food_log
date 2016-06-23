@@ -4,7 +4,7 @@ Welcome to thesis's documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    docs/thesis_lib
    docs/script
