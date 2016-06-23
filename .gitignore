@@ -9,3 +9,6 @@ __pycache__
 
 # Data for the project
 data
+
+# Build directory
+build
