@@ -8,14 +8,19 @@ def color_histogram(image, bins=40, ranges=(0, 256), eps=1e-7, normalization=Tru
 
     Parameters
     ----------
-    image: 2D or 3D array
-    bins: number of bins of the histogram
-    range: range of value of the channel
-    normalization: normalize the histogram (value in [0, 1])
+    image: array-like
+        a 2d or 3D array of double or uint8 corresponding to an image
+    bins: int, optional
+        number of bins of the histogram
+    range: tuple of 2 numbers, optional
+        range of value of the channel
+    normalization: bool, optional
+        normalize the histogram (put its value between in [0, 1])
 
     Returns
     -------
-    (bins * channel) numpy array
+    (bins * channel) :class:`numpy.ndarray`
+        Color histogram
 
     References
     ---------
@@ -49,18 +54,27 @@ def color_histogram(image, bins=40, ranges=(0, 256), eps=1e-7, normalization=Tru
 
 def local_binary_pattern_histogram(image, numPoints=18, radius=8, eps=1e-7, normalization=True):
     """
-    Compute the local
+    Compute the local binary pattern histogram for an image. The function is a wrapper
+    above :func:`skimage.feature.local_binary_pattern`.
+
+    The number of bins is: numPoints + 3.
+    If the histogram is not normalized, its values are in [0, numPoints + 1].
 
     Parameters
     ----------
-    image: 2D array (gray level)
-    numPoints: Number of circularly symmetric neighbour set points (quantization of the angular space).
-    radius: radius of circle used in the LBP algorithm
-    normalization: normalize the histogram (value in [0, 1])
+    image: 2D array-like
+        *Gray-level* image
+    numPoints: int, optional
+        Number of circularly symmetric neighbour set points (quantization of the angular space).
+    radius: int, optional
+        radius of circle used in the LBP algorithm
+    normalization: bool, optional
+        normalize the histogram (put its value between in [0, 1])
 
     Returns
     -------
-    Numpy array
+    :class:`numpy.ndarray` of size numPoints + 3
+        LBP histogram
 
     References
     ----------

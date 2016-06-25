@@ -10,14 +10,18 @@ def get_coordinate_resized_rectangles(base_shape, resized_shape, rectangles):
 
     Parameters
     ---------
-    base_shape: size of the picture (array-like of 2 elements)
-    resized_shape: new size of the picture (array-like of 2 elements)
-    rectangles: list of rectangle coordinates
+    base_shape: array-like of 2 int
+        Size of the picture
+    resized_shape: array-like of 2 int
+        New size of the picture
+    rectangles: array-like of 4 int
+        List of rectangle coordinates to resized.
         (rectangle coordinate = array of [x_0, y_0, x_1, y_1] with x and y of opposite points).
 
     Returns
     -------
-    list of arrays
+    array-like of 4 int
+        Resized coordinates
     """
     x_scale = resized_shape[0]/base_shape[1]
     y_scale = resized_shape[1]/base_shape[0]
@@ -36,6 +40,21 @@ def get_intersection_bbox(bbox1, bbox2):
     """
     Compute the intersection area between two bounding boxes / rectangles.
 
+    If the two boxes don't intersect, it returns 0.
+
+    Parameters
+    ----------
+    bbox1: array-like of 4 int
+        Coordinate of the one the first bbox
+
+    bbox2: array-like of 4 int
+        Coordinate of the one the second bbox
+
+    Return
+    ------
+    int
+        Intersection area
+
     References
     ----------
     http://uk.mathworks.com/help/vision/ref/bboxoverlapratio.html
@@ -48,6 +67,16 @@ def get_intersection_bbox(bbox1, bbox2):
 def get_area_bbox(bbox):
     """
     Compute the area of a bounding box.
+
+    Parameters
+    ----------
+    bbox: array-like of 4 int
+        Coordinate of the bbox.
+
+    Returns
+    -------
+    int
+        Area of the bbox / rectangle
     """
     return (bbox[2] - bbox[0]) * (bbox[3] - bbox[1])
 
@@ -55,6 +84,23 @@ def get_area_bbox(bbox):
 def get_overlap_ratio_bbox(bbox1, bbox2):
     """
     Compute the overlap ratio of two bounding boxes (intersection over union).
+
+    Parameters
+    ----------
+    bbox1: array-like of 4 int
+        Coordinate of the one the first bbox
+
+    bbox2: array-like of 4 int
+        Coordinate of the one the second bbox
+
+    Returns
+    -------
+    float
+        Overlap ratio
+
+    References
+    ----------
+    http://uk.mathworks.com/help/vision/ref/bboxoverlapratio.html
     """
     intersection = get_intersection_bbox(bbox1, bbox2)
     union = get_area_bbox(bbox1) + get_area_bbox(bbox2) - intersection
@@ -73,7 +119,8 @@ def get_accuracy_bbox(ground_truth_bbox, predicted_bbox, threshold=0.5):
 
     Parameters
     ----------
-    ground_truth_bbox: list of arrays of 4 int elements
+    ground_truth_bbox: array-like of int
+        list of bbox coordinates (4 int elements)
     predicted_bbox: list of arrays of 4 int elements
     threshold (float): ratio of area overlap to be considered as correct detection
 
@@ -104,8 +151,13 @@ def non_maxima_suppression(boxes, confidence, overlapThresh=0.4):
 
     Parameters
     ----------
-    boxes: numpy array of bbox
-    overlapThresh: typical value: between 0.3 and 0.5
+    boxes: array-like
+        Array of bbox coordinates
+    confidence: array-like
+        Array of confidence value
+    overlapThresh: float, optional
+        Ratio to consider two bboxes to be overlapping.
+        typical value: between 0.3 and 0.5
 
     Returns
     -------

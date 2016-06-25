@@ -8,11 +8,13 @@ def get_hu_moment_from_image(image):
 
     Parameters
     ----------
-    image: a 2d array of double or uint8
+    image: array-like
+        a 2d array of double or uint8 corresponding to an image
 
     Returns
     -------
     (7, 1) array of double
+        7 Hu's moments
 
     References
     ----------

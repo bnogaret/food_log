@@ -6,23 +6,25 @@ from skimage.transform import resize
 def display_confusion_matrix(confusion_matrix, target_names=None, fname=None, normalization=True, title='Confusion matrix', cmap=plt.cm.OrRd):
     """
     Display the confusion matrix (either save to a file or show).
-    
+
     Parameters
     ----------
-    confusion matrix: 2D array (M * M)
+    confusion_matrix: 2D array (M * M)
         Actual value of the confusion matrix
     target_names: array-like of string, optional
         Name of each element of the matrix. If it is None, it doesn't display the name.
     fname: string, optional
-        It is the path to a filename. If it's None, it display the image.
+        It is the path to a filename. If it's None, the function shows the image.
     normalize: bool, optional
-        Whether or not the function normalizes the data to get value in [0, 1] 
+        Whether or not the function normalizes the data to get value in [0, 1]
         for each line.
-    titel: str, optional
+    title: str, optional
         Title of the plot
-    cmap: pyplot colormap, optional
-        Color map of the confusion matrix
-    
+    cmap: :class:`matplotlib.colors.Colormap`, optional
+        Color map of the confusion matrix.
+        Default value: plt.cm.OrRd: orange to red colormap.
+        See `this <http://matplotlib.org/examples/color/colormaps_reference.html>`_ for more options.
+
     References
     ----------
     http://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html#example-model-selection-plot-confusion-matrix-py

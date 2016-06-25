@@ -13,9 +13,12 @@ def save_object(object_to_save, name_file, overwrite=False):
 
     Parameters
     ----------
-    object_to_save: object to save
-    name_file: name of the file. Automatically add the .pk extension, if not already present.
-    overwrite:
+    object_to_save: object
+        object to save
+    name_file: str
+        name of the file. Automatically add the .pk extension, if not already present.
+    overwrite: bool
+        Whether or not to overwrite the file if already existing
 
     References
     ----------
@@ -28,7 +31,7 @@ def save_object(object_to_save, name_file, overwrite=False):
     file_path = PATH_TO_SAVE + name_file
 
     if os.path.isfile(file_path) and not overwrite:
-        print("WARNING - file % exists. For overwriting specify overwrite=True.".format(file_path))
+        print("WARNING - file % exists. For overwriting specify overwrite=True." % (file_path))
         return
 
     print(file_path)
@@ -43,10 +46,14 @@ def load_object(name_file):
 
     Parameters
     ----------
-    name_file: name of the file. Automatically add the .pk extension, if not already present.
+    name_file: str
+        name of the file. Automatically add the .pk extension, if not already present.
 
     Returns
     -------
+    object
+        the loaded object
+
     the loaded object
     """
     # add extension if necessary

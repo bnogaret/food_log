@@ -17,7 +17,8 @@ def draw_bounding_boxes(image, bbox, color=0, copy=False):
 
     Returns
     -------
-    2D array if copy is true
+    Nothing ot 2D array-like
+        Return an array if copy is true.
     """
     if copy:
         img = image.copy()

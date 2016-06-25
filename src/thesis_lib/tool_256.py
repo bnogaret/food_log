@@ -13,8 +13,9 @@ def get_name_and_category(filename):
     label of the UEFC-FOOD-256 dataset.
 
     The 5 possible categories are from ChooseMyPlate and are:
+
     - fruit
-    - protein: meat, egg,
+    - protein: meat, egg, ...
     - vegetable
     - dairy
     - grain
@@ -27,13 +28,15 @@ def get_name_and_category(filename):
 
     Returns
     -------
-    A dataframe with:
-    - _id: int
-        index, starting from 1, corresponding to the label
-    - _name: string
-        name of the label
-    - _category: category
-        one of the five possible for a food .
+    :class:`pandas.Dataframe`
+        A pandas dataframe with:
+
+        - _id: int
+            index, starting from 1, corresponding to the label
+        - _name: string
+            name of the label
+        - _category: category
+            one of the five possible for a food .
 
     References
     ----------
@@ -66,7 +69,8 @@ def read_bb_info_txt(path, array):
     Append this information into the list 'array' (thus, the array is obviously
     MODIFIED).
 
-    The structure of the appending value is:
+    The structure of the appending values is:
+
     - first column (int): the image id (file name without jpg)
     - second (int) and third columns (int): coordinate of one of the corner
     - fourth (int) and fifth columns (int): coordinate of the opposte corner
@@ -74,8 +78,10 @@ def read_bb_info_txt(path, array):
 
     Parameters
     ----------
-    path: path to the file bb_info.txt file.
-    array: list to append the different bounding boxes
+    path: str
+        path to the file bb_info.txt file.
+    array: list, modified
+        list to append the different bounding boxes
     """
     # Get the label from the path (name of the directory containing the file)
     label = os.path.split(os.path.dirname(path))[1]

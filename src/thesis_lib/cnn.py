@@ -21,7 +21,8 @@ def get_trained_network(path_to_model, path_to_weights, image_size, channel=3):
 
     Returns
     -------
-    A :class:`caffe.Net` object
+    :class:`caffe.Net`
+        Initialised neural network
 
     """
     if not os.path.exists(path_to_model):
@@ -61,7 +62,8 @@ def get_transformer_rgb_image(input_shape, mean_value, input_scale=255):
 
     Returns
     -------
-    A ready to use :class:`caffe.io.Transformer` object.
+    :class:`caffe.io.Transformer`
+        A ready-to-use transformer object
 
     References
     ----------
