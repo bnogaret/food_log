@@ -1,9 +1,36 @@
 import os
 import pickle as pk
 
+import numpy as np
+from skimage import img_as_float
+from skimage.io import imread
+
 
 PATH_CURRENT_DIRECTORY = os.path.dirname(__file__)
 PATH_TO_SAVE = os.path.join(PATH_CURRENT_DIRECTORY, "..", "../data/")
+
+def load_img_as_float(filename):
+    """
+    Load an image and convert it as a float image (np.float32).
+    
+    Defines as a simpler replacement of 
+    `caffe.io.load_image function <https://github.com/BVLC/caffe/blob/master/python/caffe/io.py#L279>`.
+    
+    Parameters
+    ----------
+    filename: str
+        Path to the image
+    
+    Returns
+    -------
+    :class:`numpy.ndarray`
+        The image
+    
+    References
+    ----------
+    https://github.com/BVLC/caffe/blob/master/python/caffe/io.py#L279
+    """
+    return img_as_float(imread(filename)).astype(np.float32)
 
 
 def save_object(object_to_save, name_file, overwrite=False):
