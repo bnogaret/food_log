@@ -25,3 +25,4 @@ def get_sub_image_from_rectangle(image, rectangle, copy=False):
         return np.copy(image[rectangle[1]:rectangle[3], rectangle[0]:rectangle[2]])
     else:
         return image[rectangle[1]:rectangle[3], rectangle[0]:rectangle[2]]
+

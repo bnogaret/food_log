@@ -72,7 +72,7 @@ def get_transformer_rgb_image(input_shape, mean_value, input_scale=255):
     transformer = caffe.io.Transformer({'data': input_shape})
 
     transformer.set_transpose('data', (2,0,1))      # move image channels to outermost dimension
-    transformer.set_mean('data', mean_value)    # subtract the dataset-mean value in each channel
+    transformer.set_mean('data', mean_value)        # subtract the dataset-mean value in each channel
     transformer.set_raw_scale('data', input_scale)  # rescale from [0, 1] to [0, 255]
     transformer.set_channel_swap('data', (2,1,0))   # swap channels from RGB to BGR
 
