@@ -8,7 +8,7 @@ Contents:
 
    docs/thesis_lib
    docs/script
-
+   docs/constants
 
 Indices and tables
 ==================
