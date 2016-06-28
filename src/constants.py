@@ -61,7 +61,7 @@ It is used for segmentation.
 
 MEAN_BGR_VALUE = np.asarray([103.939, 116.779, 123.68])
 """
-:class:np.ndarray: Mean value of the pixels for the BGR channel (defined in this order).
+:class:`np.ndarray`: Mean value of the pixels for the BGR channel (defined in this order).
 
 It corresponds to the mean pixel value of the VGG dataset.
 """
