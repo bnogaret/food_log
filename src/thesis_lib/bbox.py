@@ -154,17 +154,22 @@ def get_accuracy_bbox(ground_truth_bbox, predicted_bbox, threshold=0.5):
     return accuracy, precision, recall
 
 
-def non_maxima_suppression(boxes, confidence, overlapThresh=0.4):
+def overlapping_suppression(boxes, confidence=None, overlap_threshold=0.4):
     """
-    Delete redundant, overlapping bounding boxes, keeping the boxes with the strongest confidence.
+    Delete redundant, overlapping bounding boxes.
+
+    When two boxes are overlapping, it keeps the box with :
+
+    - the strongest confidence if a confidence array is given
+    - the highest y-coordinate of the second point (the 4th coordinate)
 
     Parameters
     ----------
-    boxes: array-like
+    boxes: array-like of 4
         Array of bbox coordinates
-    confidence: array-like
-        Array of confidence value
-    overlapThresh: float, optional
+    confidence: array-like, optional
+        Array of confidence value. It is used to select the "best" bbox.
+    overlap_threshold: float, optional
         Ratio to consider two bboxes to be overlapping.
         typical value: between 0.3 and 0.5
 
@@ -187,16 +192,14 @@ def non_maxima_suppression(boxes, confidence, overlapThresh=0.4):
     y2 = boxes[:, 3]
 
     # compute the area of the bounding boxes and sort the bounding
-    # boxes by the bottom-right y-coordinate of the bounding box / confidence score
     area = (x2 - x1 + 1) * (y2 - y1 + 1)
-    # idxs = np.argsort(y2)
-    """
+
+    # sort the index by either the confidence or the y-coordinate of the second point
     if confidence is None:
-        idxs = np.argsort(x1)#[::-1]
+        idxs = np.argsort(y2)
+        # idxs = np.argsort(y2)[::-1] for inverse
     else:
         idxs = np.argsort(confidence)
-    """
-    idxs = np.argsort(confidence)
 
     # keep looping while some indexes still remain in the indexes
     # list
@@ -225,7 +228,7 @@ def non_maxima_suppression(boxes, confidence, overlapThresh=0.4):
 
         # delete all indexes from the index list that have
         idxs = np.delete(idxs, np.concatenate(([last],
-                np.where(overlap > overlapThresh)[0])))
+                np.where(overlap > overlap_threshold)[0])))
 
     # return only the bounding boxes that were picked using the
     # integer data type
