@@ -38,7 +38,7 @@ def draw_bounding_boxes(image, bbox, color=0, copy=False):
     return img
 
 
-def draw_arrays(data, filename=None, title="", normalize=True, padding_value=1):
+def display_arrays(data, filename=None, title="", normalize=True, padding_value=1):
     """
     Take an array of shape (n, height, width) or (n, height, width, 3)
     and visualize each (height, width) / (hieght, width, 3) thing in a grid of
@@ -47,7 +47,7 @@ def draw_arrays(data, filename=None, title="", normalize=True, padding_value=1):
 
     Parameters
     ----------
-    data: numpy array
+    data: :class:`numpy.ndarray`
         Array to visualize
     filename: str, optional
         It contains a path to a filename. If it's None, it display the image.
@@ -65,21 +65,24 @@ def draw_arrays(data, filename=None, title="", normalize=True, padding_value=1):
     """
 
     # normalize data for display (now: value included between 0 and 1)
-    data = (data - data.min()) / (data.max() - data.min())
+    if normalize:
+        array = (data - data.min()) / (data.max() - data.min())
+    else:
+        array = data.copy()
 
     # force the number of filters to be square
-    n = int(np.ceil(np.sqrt(data.shape[0])))
-    padding = (((0, n ** 2 - data.shape[0]),
+    n = int(np.ceil(np.sqrt(array.shape[0])))
+    padding = (((0, n ** 2 - array.shape[0]),
                (0, 1), (0, 1))                 # add some space between filters
-               + ((0, 0),) * (data.ndim - 3))  # don't pad the last dimension (if there is one)
-    data = np.pad(data, padding, mode='constant', constant_values=padding_value)
+               + ((0, 0),) * (array.ndim - 3))  # don't pad the last dimension (if there is one)
+    array = np.pad(array, padding, mode='constant', constant_values=padding_value)
 
     # tile the filters into an image
-    data = data.reshape((n, n) + data.shape[1:]).transpose((0, 2, 1, 3) + tuple(range(4, data.ndim + 1)))
-    data = data.reshape((n * data.shape[1], n * data.shape[3]) + data.shape[4:])
+    array = array.reshape((n, n) + array.shape[1:]).transpose((0, 2, 1, 3) + tuple(range(4, array.ndim + 1)))
+    array = array.reshape((n * array.shape[1], n * array.shape[3]) + array.shape[4:])
 
     plt.figure(figsize=(10, 14))
-    plt.imshow(data)
+    plt.imshow(array)
     plt.axis('off')
     plt.title(title)
     if filename is not None:
