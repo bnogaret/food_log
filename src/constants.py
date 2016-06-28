@@ -2,12 +2,12 @@
 File including global constants.
 
 For the dataset information: 
-- `UEC FOOD 256 <http://foodcam.mobi/dataset256.html>`
+- `UEC FOOD 256 <http://foodcam.mobi/dataset256.html>`_
 
 For the segmentation model:
-- `how to download a pre-trained model <https://github.com/BVLC/caffe/wiki/Model-Zoo>`
-- `github of the segmentation model <https://gist.github.com/jimmie33/339fd0a938ed026692267a60b44c0c58>`
-- `list of models <https://github.com/BVLC/caffe/wiki/Model-Zoo#berkeley-trained-models>`
+- `how to download a pre-trained model <https://github.com/BVLC/caffe/wiki/Model-Zoo>`_
+- `github of the segmentation model <https://gist.github.com/jimmie33/339fd0a938ed026692267a60b44c0c58>`_
+- `list of models <https://github.com/BVLC/caffe/wiki/Model-Zoo#berkeley-trained-models>`_
 
 .. warning::
     Change the values according to your project.
@@ -16,7 +16,7 @@ Examples
 --------
 >>> import constants as const
 >>> print(const.PATH_TO_UEFCFOOD256)
-/home/nogaret/.virtualenvs/thesis/project/src/../data/UECFOOD256/
+/home/nogaret/.virtualenvs/thesis/project/data/UECFOOD256
 """
 
 import os
