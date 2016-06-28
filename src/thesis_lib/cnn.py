@@ -1,6 +1,8 @@
 import os
 
 import caffe
+import numpy as np
+from skimage.transform import resize
 
 
 def get_trained_network(path_to_model, path_to_weights, image_size, channel=3):
@@ -42,7 +44,55 @@ def get_trained_network(path_to_model, path_to_weights, image_size, channel=3):
     return net
 
 
-def get_transformer_rgb_image(input_shape, mean_value, input_scale=255):
+def transform_rgb_image(image, input_shape, mean_bgr_value):
+    """
+    Transform an image to make it compatible with the input of the CNN:
+    
+    - configured to take images in BGR format
+    - values in the range [0, 255]
+    - mean pixel of the trained dataset value subtracted from each channel
+    - channel dimension is expected as the first (outermost) dimension
+    
+    It is a simplified version of :func:`get_transformer_rgb_image`.
+
+    Parameters
+    ----------
+    image: array-like
+        RGB image. **It is not modified**.
+    input_shape: array-like of 2 int
+        input shape of the network
+    mean_bgr_value: :class:`numpy.ndarray` of 3 int
+        Set the mean to subtract for centering the data.
+        Must be in BGR order and in [0, 255]
+
+    Returns
+    -------
+    :class:`numpy.ndarray`
+        The transformed image
+
+    References
+    ----------
+    https://github.com/BVLC/caffe/blob/master/python/caffe/io.py#L98
+    """
+    # Transform shape of the array: (3,) --> (3, 1, 1)
+    mean = mean_bgr_value[:, np.newaxis, np.newaxis]
+    # Convert image as a float
+    img = image.astype(np.float32, copy=True)
+    # Resize
+    img = resize(img, input_shape, order=1)
+    # move image channels to outermost dimension
+    # Ex: shape: (224, 360, 3) --> (3, 224, 360)
+    img = img.transpose((2, 0, 1))
+    # swap channels from RGB to BGR
+    img = img[(2, 1, 0),:,:]
+    # Rescale image
+    img *= 255
+    # Substract the mean from each channel
+    img -= mean
+    
+    return img
+
+def get_transformer_rgb_image(input_shape, mean_bgr_value):
     """
     Return a caffe.Transformer class that modify an array to preprocess the
     input of a network.
@@ -51,14 +101,9 @@ def get_transformer_rgb_image(input_shape, mean_value, input_scale=255):
     ----------
     input_shape: array-like of 2 int
         input shape of the network
-    mean_value: array-like of 3 numbers
+    mean_bgr_value: :class:`numpy.ndarray` of 3 int
         Set the mean to subtract for centering the data.
-        Must have the same scale as the one given by input scale.
-    input_scale: number, optional
-        set the scale of the input_blob (realised before any other preprocessing).
-        Python represent images with value in [0, 1], yet, some caffe model
-        expect an other scale (example: [0, 255]).
-        input_blob = initial_input * input_scale
+        Must be in BGR order and in [0, 255]
 
     Returns
     -------
@@ -72,8 +117,8 @@ def get_transformer_rgb_image(input_shape, mean_value, input_scale=255):
     transformer = caffe.io.Transformer({'data': input_shape})
 
     transformer.set_transpose('data', (2,0,1))      # move image channels to outermost dimension
-    transformer.set_mean('data', mean_value)        # subtract the dataset-mean value in each channel
-    transformer.set_raw_scale('data', input_scale)  # rescale from [0, 1] to [0, 255]
+    transformer.set_mean('data', mean_bgr_value)        # subtract the dataset-mean value in each channel
+    transformer.set_raw_scale('data', 255)          # rescale from [0, 1] to [0, 255]
     transformer.set_channel_swap('data', (2,1,0))   # swap channels from RGB to BGR
 
     return transformer
