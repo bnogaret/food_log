@@ -5,6 +5,7 @@ sys.path.insert(0, os.path.abspath('..'))
 
 import unittest
 import numpy as np
+from numpy.testing import assert_allclose
 
 import caffe
 
@@ -18,4 +19,4 @@ class LoadImgTest(unittest.TestCase):
         img_caffe = caffe.io.load_image(image_path)
         img = load_img_as_float(image_path)
         
-        self.assertTrue(np.allclose(img, img_caffe))
+        assert_allclose(img, img_caffe)

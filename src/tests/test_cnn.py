@@ -5,6 +5,7 @@ sys.path.insert(0, os.path.abspath('..'))
 
 import unittest
 import numpy as np
+from numpy.testing import assert_allclose
 
 import caffe
 
@@ -25,4 +26,4 @@ class TransformRgbTest(unittest.TestCase):
         
         img = transform_rgb_image(image, (224, 224), mean_bgr)
         
-        print(np.allclose(img, transformed_image, rtol=1e-04, atol=1e-05))
+        assert_allclose(img, transformed_image, rtol=1e-04, atol=1e-05)
