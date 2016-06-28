@@ -10,9 +10,9 @@ def color_histogram(image, bins=40, distribution="marginal", ranges=(0, 256), ep
     Get the color histogram of the image. It can either work on independantly
     for each channel (marginal distribution) or by combination of 2 channels
     (joint distribution).
-    
+
     .. warning::
-        If joint is used, be careful not to have too many channels / a 
+        If joint is used, be careful not to have too many channels / a
         lot of bins.
 
     Parameters
@@ -23,12 +23,12 @@ def color_histogram(image, bins=40, distribution="marginal", ranges=(0, 256), ep
         number of bins of the histogram
     distribution: str, optional
         either 'marginal' or 'joint'
-        Compute marginal histogram for each channel or joint histogram for each 
-        2D combination of channel. If 'joint' is used, be careful not to put a 
+        Compute marginal histogram for each channel or joint histogram for each
+        2D combination of channel. If 'joint' is used, be careful not to put a
         too big 'bins' value and / or execute it on too many channels.
-    range: tuple of 2 numbers or :class:`numpy.ndarray` of 2 numbers, optional
+    range: array-like of 2 numbers or :class:`numpy.ndarray`, optional
         range of value of the channel.
-        For a joint histogram
+        For a joint histogram, the numpy array must have as many array-like of 2 numbers as channels.
     normalization: bool, optional
         normalize the histogram (put its value between in [0, 1])
 
@@ -36,8 +36,17 @@ def color_histogram(image, bins=40, distribution="marginal", ranges=(0, 256), ep
     -------
     :class:`numpy.ndarray`
         Color histogram of size:
+
         - ((bins + 2) * channel) for 'marginal' distribution
-        - (bins * bins * :math:`\dbinom{number_of_channels}{2}`) for 'joint' distribution
+        - (bins * bins * :math:`\dbinom{number~of~channels}{2}`) for 'joint' distribution
+
+    Examples
+    --------
+    >>> from thesis_lib.histogram import color_histogram
+    >>> img = np.ones((100, 100, 3), dtype=np.uint8)
+    >>> hist = color_histogram(img, bins=10, distribution='joint', ranges=((0, 1),(0, 1), (0, 1)))
+    >>> print(hist.shape)
+    (300,)
 
     References
     ---------
@@ -47,13 +56,13 @@ def color_histogram(image, bins=40, distribution="marginal", ranges=(0, 256), ep
     # Get the number of channels of the image
     # http://stackoverflow.com/a/19063058
     nb_chan =  image.shape[2] if len(image.shape) == 3 else 1
-    
+
     features = []
-    
+
     if distribution == "joint" and nb_chan <= 1:
         warn("Not enough channel to execute a joint histogram (at least 2 channels are required).")
         distribution = "marginal"
-    
+
     if distribution == "marginal":
         for i in range(nb_chan):
             # create a histogram for the current channel and
@@ -65,10 +74,10 @@ def color_histogram(image, bins=40, distribution="marginal", ranges=(0, 256), ep
             if normalization:
                 hist = hist.astype("float")
                 hist /= (hist.sum() + eps)
-            
+
             # concatenate the resulting histograms for each channel
             features.append(hist)
-    
+
     elif distribution == "joint":
         # iter over all the 2 elements combination of channels
         for i, j in itertools.combinations(range(nb_chan), 2):
@@ -76,14 +85,14 @@ def color_histogram(image, bins=40, distribution="marginal", ranges=(0, 256), ep
                                         image[:, :, j].flatten(), # select the j-th channel
                                         bins=bins,
                                         range=ranges)
-            
+
             hist = hist.flatten()
-            
+
             # normalize the histogram
             if normalization:
                 hist = hist.astype("float")
-                hist /= (hist.sum() + eps) 
-            
+                hist /= (hist.sum() + eps)
+
             features.append(hist)
 
     return np.array(features).flatten()
