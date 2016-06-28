@@ -15,8 +15,8 @@ from thesis_lib.cnn import get_transformer_rgb_image, transform_rgb_image
 
 class TransformRgbTest(unittest.TestCase):
     def test_same_behaviour_between_transform(self):
-        imagePath = "color_image.jpg"
-        image = load_img_as_float(imagePath)
+        image_path = "color_image.jpg"
+        image = load_img_as_float(image_path)
         
         mean_bgr = np.asarray([103.939, 116.779, 123.68])
         
