@@ -1,5 +1,11 @@
 """
-File containing functions on bounding boxes (bbox)
+File containing functions on bounding boxes (bbox).
+
+A bouding box is represented by its coordinate as a :class:`numpy.ndarray` :math:`(x_0, y_0, x_1, y_1)`:
+
+- :math:`(x_0, y_0)`: coordinate of one of the point
+- :math:`(x_1, y_1)`: coordinate of the opposite point
+
 """
 
 import numpy as np
@@ -10,17 +16,16 @@ def get_coordinate_resized_rectangles(base_shape, resized_shape, rectangles):
 
     Parameters
     ---------
-    base_shape: array-like of 2 int
+    base_shape: array-like of 2
         Size of the picture
-    resized_shape: array-like of 2 int
+    resized_shape: array-like of 2
         New size of the picture
-    rectangles: array-like of 4 int
+    rectangles: array-like of 4
         List of rectangle coordinates to resized.
-        (rectangle coordinate = array of [x_0, y_0, x_1, y_1] with x and y of opposite points).
 
     Returns
     -------
-    array-like of 4 int
+    array-like of 4 floats
         Resized coordinates
     """
     x_scale = resized_shape[0]/base_shape[1]
@@ -44,15 +49,15 @@ def get_intersection_bbox(bbox1, bbox2):
 
     Parameters
     ----------
-    bbox1: array-like of 4 int
+    bbox1: array-like of 4
         Coordinate of the one the first bbox
 
-    bbox2: array-like of 4 int
+    bbox2: array-like of 4
         Coordinate of the one the second bbox
 
     Return
     ------
-    int
+    number
         Intersection area
 
     References
@@ -70,13 +75,13 @@ def get_area_bbox(bbox):
 
     Parameters
     ----------
-    bbox: array-like of 4 int
+    bbox: array-like of 4
         Coordinate of the bbox.
 
     Returns
     -------
     int
-        Area of the bbox / rectangle
+        Area of the bbox
     """
     return (bbox[2] - bbox[0]) * (bbox[3] - bbox[1])
 
@@ -87,11 +92,11 @@ def get_overlap_ratio_bbox(bbox1, bbox2):
 
     Parameters
     ----------
-    bbox1: array-like of 4 int
-        Coordinate of the one the first bbox
+    bbox1: array-like of 4
+        Coordinate of the the first bbox
 
-    bbox2: array-like of 4 int
-        Coordinate of the one the second bbox
+    bbox2: array-like of 4
+        Coordinate of the the second bbox
 
     Returns
     -------
@@ -119,14 +124,18 @@ def get_accuracy_bbox(ground_truth_bbox, predicted_bbox, threshold=0.5):
 
     Parameters
     ----------
-    ground_truth_bbox: array-like of int
-        list of bbox coordinates (4 int elements)
-    predicted_bbox: list of arrays of 4 int elements
-    threshold (float): ratio of area overlap to be considered as correct detection
+    ground_truth_bbox: array-like of 4
+        list of bbox coordinates
+    predicted_bbox: array-like of 4
+        list of bbox coordinates
+    threshold : float, optional
+        Ratio of area overlap to be considered as correct detection.
+        Must be in [0, 1].
 
     Returns
     -------
-    accuracy, precision, recall: three floats numbers
+    float, float, float:
+        accuracy, precision and recall values
 
     References
     ----------

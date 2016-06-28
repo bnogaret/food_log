@@ -1,11 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from skimage.draw import polygon_perimeter, polygon
+from skimage.draw import polygon_perimeter
 
 
 def draw_bounding_boxes(image, bbox, color=0, copy=False):
     """
-    Draw rectangles on the image, using the representation with two points (pt1_x, pt1_y, pt2_x, pt2_y).
+    Draw rectangles on the image, using the representation described in `bbox`.
     If copy is true, it return a deep copy, otherwise it modifies directly the parameter 'image'.
 
     Parameters
@@ -86,4 +86,3 @@ def draw_arrays(data, filename=None, title="", normalize=True, padding_value=1):
         plt.savefig(filename)
     else:
         plt.show()
-

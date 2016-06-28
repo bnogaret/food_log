@@ -7,7 +7,7 @@ from skimage.transform import resize
 
 def get_trained_network(path_to_model, path_to_weights, image_size, channel=3):
     """
-    Load and return a trained network.
+    Load a trained network.
 
     Parameters
     ----------
@@ -47,12 +47,12 @@ def get_trained_network(path_to_model, path_to_weights, image_size, channel=3):
 def transform_rgb_image(image, input_shape, mean_bgr_value):
     """
     Transform an image to make it compatible with the input of the CNN:
-    
+
     - configured to take images in BGR format
     - values in the range [0, 255]
     - mean pixel of the trained dataset value subtracted from each channel
     - channel dimension is expected as the first (outermost) dimension
-    
+
     It is a simplified version of :func:`get_transformer_rgb_image`.
 
     Parameters
@@ -89,7 +89,7 @@ def transform_rgb_image(image, input_shape, mean_bgr_value):
     img *= 255
     # Substract the mean from each channel
     img -= mean
-    
+
     return img
 
 def get_transformer_rgb_image(input_shape, mean_bgr_value):

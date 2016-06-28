@@ -73,7 +73,7 @@ def get_list_image_file(path_to_root_dir):
     ----------
     path_to_root_dir: str
         Path to the root directory of the UEC FOOD 256 dataset.
-    
+
     Returns
     -------
     :class:`pandas.Dataframe`
@@ -89,18 +89,18 @@ def get_list_image_file(path_to_root_dir):
     for filename in glob.iglob(path_to_root_dir + '/**/*.jpg', recursive=True):
         file_without_jpg = os.path.basename(filename).replace(".jpg", '')
         dictionary[int(file_without_jpg)] = os.path.abspath(filename)
-    
+
     df_filepath = pd.DataFrame(list(dictionary.items()),
                                columns=['_image_id','_image_path'])
-    
+
     return df_filepath
 
 
 def read_bb_info_txt(path, array):
     """
     Read the bb_info.txt to get the rectangle coordinates and its class.
-    Append this information into the list 'array' (thus, the array is obviously
-    MODIFIED).
+    Append this information into the list 'array' (thus, **the array is obviously
+    MODIFIED**).
 
     The structure of the appending values is:
 

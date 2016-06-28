@@ -12,20 +12,20 @@ PATH_TO_SAVE = os.path.join(PATH_CURRENT_DIRECTORY, "..", "../data/")
 def load_img_as_float(filename):
     """
     Load an image and convert it as a float image (np.float32).
-    
-    Defines as a simpler replacement of 
+
+    Defines as a simpler replacement of
     `caffe.io.load_image function <https://github.com/BVLC/caffe/blob/master/python/caffe/io.py#L279>`.
-    
+
     Parameters
     ----------
     filename: str
         Path to the image
-    
+
     Returns
     -------
-    :class:`numpy.ndarray`
+    :class:`numpy.ndarray` of float
         The image
-    
+
     References
     ----------
     https://github.com/BVLC/caffe/blob/master/python/caffe/io.py#L279
@@ -80,8 +80,6 @@ def load_object(name_file):
     -------
     object
         the loaded object
-
-    the loaded object
     """
     # add extension if necessary
     if name_file[-2:] != ".pk":
