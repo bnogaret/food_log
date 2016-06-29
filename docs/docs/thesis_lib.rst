@@ -9,6 +9,13 @@ bbox
     :members:
     :undoc-members:
 
+cross validation
+================
+
+.. automodule:: thesis_lib.cross_validation
+    :members:
+    :undoc-members:
+
 cnn
 ===
 
