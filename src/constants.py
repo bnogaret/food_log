@@ -1,7 +1,7 @@
 """
 File including global constants.
 
-For the dataset information: 
+For the dataset information:
 - `UEC-FOOD 256 <http://foodcam.mobi/dataset256.html>`_
 - `UEC-FOOD 100 <http://foodcam.mobi/dataset100.html>`_
 
@@ -25,7 +25,7 @@ import numpy as np
 
 
 __all__ = ['PATH_TO_ROOT_UECFOOD256',
-           'PATH_TO_ROOT_UECFOOD100'
+           'PATH_TO_ROOT_UECFOOD100',
            'PATH_TO_SEG_MODEL_DEF',
            'PATH_TO_SEG_MODEL_WEIGHTS',
            'PATH_TO_SEG_BBOX',
@@ -47,13 +47,13 @@ str: Path to the root directory including the UEC-FOOD 100 dataset.
 
 PICKLE_FILENAME_256_GT_BBOX = "256_gt_bbox"
 """
-str: filename (doesn't include the path) to the pickle file containing the 
+str: filename (doesn't include the path) to the pickle file containing the
 ground truth bbox coordinates.
 """
 
 PICKLE_FILENAME_256_GT_BBOX = "256_gt_bbox"
 """
-str: filename (doesn't include the path) to the pickle file containing the 
+str: filename (doesn't include the path) to the pickle file containing the
 ground truth bbox coordinates.
 """
 
