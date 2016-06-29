@@ -4,7 +4,9 @@ from sklearn.metrics import confusion_matrix, classification_report, accuracy_sc
 from sklearn.externals.joblib import delayed, Parallel
 from sklearn.cross_validation import StratifiedKFold
 
+
 __all__ = ['cross_val_multiple_scores']
+
 
 def fit_and_predict(classifier, X, y, train_idx, test_idx):
     """
@@ -83,7 +85,7 @@ def cross_val_multiple_scores(classifier, X, y, n_folds=10, n_jobs=-1):
     
     - uses :class:`sklearn.cross_validation.StratifiedKFold` to split the data
     - fits and predicts the classifer on these splits
-    - compute the mean for each metric's results
+    - compute the mean for each metric's result
     
     Parameters
     ----------
@@ -120,12 +122,6 @@ def cross_val_multiple_scores(classifier, X, y, n_folds=10, n_jobs=-1):
     for i in cm:
         cm_sum += i
     cm_sum /= n_folds
-    
-    # print(cv_accuracy)
-    
-    # cm = confusion_matrix(predicted_ys[0][0], predicted_ys[0][1])
-    # print(list(cv_cm))
-    # display_confusion_matrix(cm, fname=IMAGE_ROOT + "confusion_matrix.jpg")
     
     return {
         'cv_accuracy': np.mean(np.fromiter(accuracy, np.float)),
