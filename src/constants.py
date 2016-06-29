@@ -2,7 +2,8 @@
 File including global constants.
 
 For the dataset information: 
-- `UEC FOOD 256 <http://foodcam.mobi/dataset256.html>`_
+- `UEC-FOOD 256 <http://foodcam.mobi/dataset256.html>`_
+- `UEC-FOOD 100 <http://foodcam.mobi/dataset100.html>`_
 
 For the segmentation model:
 - `how to download a pre-trained model <https://github.com/BVLC/caffe/wiki/Model-Zoo>`_
@@ -24,6 +25,7 @@ import numpy as np
 
 
 __all__ = ['PATH_TO_ROOT_UECFOOD256',
+           'PATH_TO_ROOT_UECFOOD100'
            'PATH_TO_SEG_MODEL_DEF',
            'PATH_TO_SEG_MODEL_WEIGHTS',
            'PATH_TO_SEG_BBOX',
@@ -35,7 +37,24 @@ __all__ = ['PATH_TO_ROOT_UECFOOD256',
 PATH_CURRENT_DIRECTORY = os.path.dirname(__file__)
 PATH_TO_ROOT_UECFOOD256 = os.path.abspath(PATH_CURRENT_DIRECTORY + "/../data/UECFOOD256/")
 """
-str: Path to the root directory including the UEC FOOD 256 dataset.
+str: Path to the root directory including the UEC-FOOD 256 dataset.
+"""
+
+PATH_TO_ROOT_UECFOOD100 = os.path.abspath(PATH_CURRENT_DIRECTORY + "/../data/UECFOOD100/")
+"""
+str: Path to the root directory including the UEC-FOOD 100 dataset.
+"""
+
+PICKLE_FILENAME_256_GT_BBOX = "256_gt_bbox"
+"""
+str: filename (doesn't include the path) to the pickle file containing the 
+ground truth bbox coordinates.
+"""
+
+PICKLE_FILENAME_256_GT_BBOX = "256_gt_bbox"
+"""
+str: filename (doesn't include the path) to the pickle file containing the 
+ground truth bbox coordinates.
 """
 
 CAFFE_ROOT = "/scratch/s242635/caffe/caffe/"
