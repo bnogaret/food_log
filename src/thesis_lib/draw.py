@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from skimage.draw import polygon_perimeter
+import cv2
 
 
 def draw_bounding_boxes(image, bbox, color=0, copy=False):
@@ -36,6 +37,50 @@ def draw_bounding_boxes(image, bbox, color=0, copy=False):
         img[rr, cc] = color
 
     return img
+
+
+def display_keypoints(img, keypoints, output_img=None, filename=None, rich_keypoints=False):
+    """
+    Display :class:`cv2.KeyPoint` (opencv keypoints) on an image.
+    
+    img and output_img are not modified.
+    
+    Parameters
+    ----------
+    img: array-like
+        Source image
+    keypoints: list of :class:`cv2.KeyPoint`
+        Keypoints to draw
+    output_img: array-like, optional
+        Draw keypoints on this image (if none, draw keypoints on img)
+    filename: str, optional
+        It contains a path to a filename. If it's None, it display the image.
+        It should not be an empty string and should include the extension.
+    rich_keypoints: bool, optional
+        Draw rich keypoints or not
+    
+    References
+    ----------
+    http://docs.opencv.org/3.1.0/da/df5/tutorial_py_sift_intro.html#gsc.tab=0
+    http://docs.opencv.org/3.0-beta/modules/features2d/doc/drawing_function_of_keypoints_and_matches.html
+    """
+    if output_img is not None:
+        new_img = output_img.copy()
+    else:
+        new_img = img.copy()
+    
+    if rich_keypoints:
+        new_img = cv2.drawKeypoints(img, keypoints, new_img, flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+    else:
+        new_img = cv2.drawKeypoints(img, keypoints, new_img, flags=cv2.DRAW_MATCHES_FLAGS_NOT_DRAW_SINGLE_POINTS)
+    
+    plt.figure(figsize=(20,10))
+    plt.imshow(new_img)
+    
+    if filename is not None:
+        plt.savefig(filename)
+    else:
+        plt.show()
 
 
 def display_arrays(data, filename=None, title="", normalize=True, padding_value=1):
