@@ -118,7 +118,9 @@ def cross_val_multiple_scores(classifier, X, y, n_folds=10, n_jobs=-1):
     f1 = map(lambda tp: f1_score(tp[0], tp[1], average='weighted'), predicted_ys)
     cm = map(lambda tp: confusion_matrix(tp[0], tp[1]), predicted_ys)
     
-    cm_sum = np.zeros((4, 4), np.float)
+    nb_label = np.unique(y).size
+    
+    cm_sum = np.zeros((nb_label, nb_label), np.float)
     for i in cm:
         cm_sum += i
     cm_sum /= n_folds
