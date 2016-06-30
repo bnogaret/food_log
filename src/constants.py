@@ -26,6 +26,7 @@ import numpy as np
 
 __all__ = ['PATH_TO_ROOT_UECFOOD256',
            'PATH_TO_ROOT_UECFOOD100',
+           'PATH_TO_IMAGE_DIR',
            'PATH_TO_SEG_MODEL_DEF',
            'PATH_TO_SEG_MODEL_WEIGHTS',
            'PATH_TO_SEG_BBOX',
@@ -43,6 +44,11 @@ str: Path to the root directory including the UEC-FOOD 256 dataset.
 PATH_TO_ROOT_UECFOOD100 = os.path.abspath(PATH_CURRENT_DIRECTORY + "/../data/UECFOOD100/")
 """
 str: Path to the root directory including the UEC-FOOD 100 dataset.
+"""
+
+PATH_TO_IMAGE_DIR = os.path.abspath(PATH_CURRENT_DIRECTORY + "/../img/")
+"""
+str: Path to the directory to save images (plots ...)
 """
 
 PICKLE_FILENAME_256_GT_BBOX = "256_gt_bbox"
@@ -88,6 +94,5 @@ It corresponds to the mean pixel value of the VGG dataset.
 IMAGE_SIZE = (224, 224)
 """
 tuple: Image size of the input data of the CNN used for the segmentation.
-
 """
 
