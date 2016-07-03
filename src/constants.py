@@ -27,6 +27,8 @@ import numpy as np
 __all__ = ['PATH_TO_ROOT_UECFOOD256',
            'PATH_TO_ROOT_UECFOOD100',
            'PATH_TO_IMAGE_DIR',
+           'PICKLE_FILENAME_256_GT_BBOX',
+           'PICKLE_FILENAME_100_GT_BBOX',
            'PATH_TO_SEG_MODEL_DEF',
            'PATH_TO_SEG_MODEL_WEIGHTS',
            'PATH_TO_SEG_BBOX',
@@ -54,13 +56,13 @@ str: Path to the directory to save images (plots ...)
 PICKLE_FILENAME_256_GT_BBOX = "256_gt_bbox"
 """
 str: filename (doesn't include the path) to the pickle file containing the
-ground truth bbox coordinates.
+ground truth bbox coordinates for UECFOOD 256.
 """
 
-PICKLE_FILENAME_256_GT_BBOX = "256_gt_bbox"
+PICKLE_FILENAME_100_GT_BBOX = "100_gt_bbox"
 """
 str: filename (doesn't include the path) to the pickle file containing the
-ground truth bbox coordinates.
+ground truth bbox coordinates for UECFOOD 100.
 """
 
 CAFFE_ROOT = "/scratch/s242635/caffe/caffe/"
