@@ -26,22 +26,6 @@ from thesis_lib.io import load_object
 
 import constants as const
 
-"""
-PATH_CURRENT_DIRECTORY = os.path.dirname(__file__)
-PATH_TO_UECFOOD256 = PATH_CURRENT_DIRECTORY + "/../../data/UECFOOD256/"
-PATH_TO_IMAGE_DIR = PATH_CURRENT_DIRECTORY + "/../../img/"
-
-CAFFE_ROOT = "/scratch/s242635/caffe/caffe/"
-PATH_TO_SEGMENTATION_MODEL = CAFFE_ROOT + "/models/339fd0a938ed026692267a60b44c0c58/"
-
-PATH_TO_SEG_MODEL_DEF = PATH_TO_SEGMENTATION_MODEL + 'deploy.prototxt'
-PATH_TO_SEG_MODEL_WEIGHTS = PATH_TO_SEGMENTATION_MODEL + 'GoogleNet_SOD_finetune.caffemodel'
-PATH_TO_NET_BBOX = PATH_TO_SEGMENTATION_MODEL + 'center100.txt'
-
-IMAGE_SIZE = (224, 224)
-MEAN_BGR_VALUE = np.asarray([103.939, 116.779, 123.68])
-"""
-
 
 def argument_parser():
     parser = argparse.ArgumentParser(description="Save image of segmentation")
