@@ -17,7 +17,8 @@ from .measure import get_hu_moment_from_image
 from .cnn import transform_rgb_image, get_trained_network
 
 
-__all__ = ['HistogramDescriptor',
+__all__ = ['BaseDescriptor',
+           'HistogramDescriptor',
            'BagOfWordsDescriptor',
            'CnnDescriptor']
 
