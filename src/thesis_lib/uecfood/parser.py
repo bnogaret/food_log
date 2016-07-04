@@ -95,3 +95,75 @@ def read_bb_info_txt(path, array):
             
             data.append(os.path.abspath(directory + "/" + split_line[0] + ".jpg"))
             array.append(data)
+
+def get_multiple_food_image(root_path):
+    """
+    Parse the multiple_food.txt file and return a dataframe corresponding to it.
+    """
+    
+    data = []
+    with open(root_path + "/multiple_food.txt", 'r') as f:
+        f.readline() # skip the first line that have the column names
+        for line in f:
+            split_line = line.split()
+            split_line = [int(i) for i in split_line]
+            
+            image_name = split_line[0]
+            
+            for category in split_line[1:]:
+                data.append([image_name, category])
+    
+    df = pd.DataFrame(data, columns=['_img_name', '_cat'])
+
+    return df
+
+
+def get_ground_truth_bbox(root_path, verbose=True):
+    """
+    Parse all the bb_info.txt and combine it with the multiple food image dataframe.
+    
+    Parameters
+    ----------
+    root_path: str
+        Path to the UECFOOD 256 or 100 root directory
+    
+    Returns
+    -------
+    :class:`pandas.Dataframe`
+        A pandas dataframe with:
+
+        - '_img_name' (str): filename of the image
+        -  '_x1' (int), '_y1' (int), '_x2' (int), '_y2' (int): coordinate of the bbox
+        - '_cat' (int): category
+        - '_abs_path' (str): absolute path to the image
+    """
+    data = []
+    
+    for entry in os.scandir(root_path):
+        if entry.is_dir(follow_symlinks=False):
+            read_bb_info_txt(entry.path + "/bb_info.txt", data)
+
+    # Transform the list into a pandas dataframe
+    df = pd.DataFrame(data, columns=['_img_name', '_x1', '_y1', '_x2', '_y2', '_cat', '_abs_path'])
+    
+    # Add a new column
+    df['_multi_item'] = False
+    
+    if verbose:
+        print(df.head())
+        print(df.describe())
+        print(df.dtypes)
+        print(df.shape)
+        print(df._cat.unique())
+        print(len(df._cat.unique()))
+    
+    df_multiple_item = get_multiple_food_image(root_path)
+    
+    if verbose:
+        print(df_multiple_item.head())
+        print(df_multiple_item.dtypes)
+        print(df_multiple_item.shape)
+    
+    df.ix[df._img_name.isin(df_multiple_item._img_name) & df._cat.isin(df_multiple_item._cat), '_multi_item'] = True
+    
+    return df
