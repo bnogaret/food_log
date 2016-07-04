@@ -29,6 +29,8 @@ descriptor
 .. automodule:: thesis_lib.descriptor
     :members:
     :undoc-members:
+    :special-members: __init__
+    :inherited-members:
 
 draw
 ====
