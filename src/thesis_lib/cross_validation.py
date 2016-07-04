@@ -41,7 +41,7 @@ def fit_and_predict(classifier, X, y, train_idx, test_idx):
 
 def get_true_and_pred_cross_val(classifier, X, y, cv_iter, n_jobs=-1):
     """
-    Fit and predict by cross validation and in parallel.
+    Fit and predict by cross validation and in parallel (if n_jobs != 1).
     
     Parameters
     ----------
@@ -68,10 +68,15 @@ def get_true_and_pred_cross_val(classifier, X, y, cv_iter, n_jobs=-1):
     ----------
     https://github.com/scikit-learn/scikit-learn/blob/51a765a/sklearn/cross_validation.py#L1351
     """
-    parallel = Parallel(n_jobs=n_jobs)
-    ys = parallel(delayed(fit_and_predict)(clone(classifier), X, y,
-                                           train_idx, test_idx)
-                          for train_idx, test_idx in cv_iter)
+    if n_jobs == 1:
+        ys = []
+        for train_idx, test_idx in cv_iter:
+            ys.append(fit_and_predict(clone(classifier), X, y, train_idx, test_idx))
+    else:
+        parallel = Parallel(n_jobs=n_jobs)
+        ys = parallel(delayed(fit_and_predict)(clone(classifier), X, y,
+                                               train_idx, test_idx)
+                              for train_idx, test_idx in cv_iter)
 
     return ys
 
@@ -111,7 +116,7 @@ def cross_val_multiple_scores(classifier, X, y, n_folds=10, n_jobs=-1):
     """
     cv_iter = StratifiedKFold(y, n_folds)
     
-    predicted_ys = get_true_and_pred_cross_val(classifier, X, y, cv_iter)
+    predicted_ys = get_true_and_pred_cross_val(classifier, X, y, cv_iter, n_jobs=n_jobs)
     accuracy = map(lambda tp: accuracy_score(tp[0], tp[1]), predicted_ys)
     precision = map(lambda tp: precision_score(tp[0], tp[1], average='weighted'), predicted_ys)
     recall = map(lambda tp: recall_score(tp[0], tp[1], average='weighted'), predicted_ys)
