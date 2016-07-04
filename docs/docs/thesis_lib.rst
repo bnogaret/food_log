@@ -23,6 +23,13 @@ cnn
     :members:
     :undoc-members:
 
+descriptor
+==========
+
+.. automodule:: thesis_lib.descriptor
+    :members:
+    :undoc-members:
+
 draw
 ====
 
@@ -51,13 +58,6 @@ measure
     :members:
     :undoc-members:
 
-tool_256
-========
-
-.. automodule:: thesis_lib.tool_256
-    :members:
-    :undoc-members:
-
 tool
 ====
 
@@ -69,5 +69,12 @@ transform
 =========
 
 .. automodule:: thesis_lib.transform
+    :members:
+    :undoc-members:
+
+uecfood
+========
+
+.. automodule:: thesis_lib.uecfood
     :members:
     :undoc-members:
