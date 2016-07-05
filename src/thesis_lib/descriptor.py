@@ -8,7 +8,6 @@ import numpy as np
 from skimage import img_as_ubyte, img_as_float
 from skimage.color import rgb2gray, rgb2hsv
 from sklearn.preprocessing import scale
-from sklearn.kernel_approximation import AdditiveChi2Sampler
 from sklearn.cluster import MiniBatchKMeans
 from skimage.color import rgb2gray, rgb2hsv
 
@@ -64,18 +63,19 @@ class BaseDescriptor(metaclass=abc.ABCMeta):
         return
 
 
-class HistogramDescriptor(BaseDescriptor):
+class HistogramMomentDescriptor(BaseDescriptor):
     """
     Histogram descriptor: 
     
     - local binary pattern histogram
     - color histogram: joint histogram on H and S channels or marginal histogram for R, G and B channels
+    - mean and var for each picture channel
     - hu moments
     
-    Post-process: scale the data
+    Post-process: scale the data (if scale == True)
     """
     
-    def __init__(self, bin_lbp = 48, bin_ch = 20, distribution='joint'):
+    def __init__(self, bin_lbp = 48, bin_ch = 20, distribution='joint', scale=True):
         """
         Parameters
         ----------
@@ -85,31 +85,43 @@ class HistogramDescriptor(BaseDescriptor):
             Number of bins for the color histogram
         distribution: str
             Joint or marginal
+        scale: bool
+            Whether or not scale the data in post-process
         """
         self.bin_lbp = bin_lbp
         self.bin_ch = bin_ch
         self.distribution = distribution
+        self.scale = scale
     
     def get_feature(self, image):
         gray = rgb2gray(image)
         
         lbph = local_binary_pattern_histogram(gray, self.bin_lbp, 8)
+        
         if self.distribution == "joint":
             hsv = rgb2hsv(image)
             ch = color_histogram(hsv[:,:,:2], self.bin_ch, ranges=((0,1),(0,1)), distribution=self.distribution)
         else:
             ch = color_histogram(image, self.bin_ch, ranges=(0,1), distribution=self.distribution)
+        
+        # Mean of each RGB channel
+        mean = np.mean(image, axis=(0,1))
+        # Variance of each RGB channel
+        var = np.var(image, axis=(0,1))
+        
         hu = get_hu_moment_from_image(gray)
         
-        feature = np.hstack((lbph, ch, hu))
+        feature = np.hstack((lbph, ch, mean, var, hu))
+        
         return feature
 
     def post_process_data(self, data, target):
         X = np.asarray(data)
         y = np.asarray(target)
         
-        # scale the data: zero mean and unit variance
-        scaled_X = scale(X)
+        if self.scale:
+            # scale the data: zero mean and unit variance
+            X = scale(X)
         return X, y
 
 
@@ -121,11 +133,10 @@ class BagOfWordsDescriptor(BaseDescriptor):
     
     - create the visual words using the KNN method
     - get histogram for each data
-    - chi2 kernel
-    - scale the data
+    - scale the data (if scale == True)
     """
     
-    def __init__(self, image_size=(400, 400), vocabulary_size=1000, step_size=4):
+    def __init__(self, image_size=(400, 400), vocabulary_size=1000, step_size=4, scale=True):
         """
         Parameters
         ----------
@@ -135,6 +146,8 @@ class BagOfWordsDescriptor(BaseDescriptor):
             Number of visual words
         step_size: int
             Size of the dense grid
+        scale: bool
+            Whether or not scale the data in post-process
         """
         self.kp = [cv2.KeyPoint(x, y, step_size) for y in range(0, image_size[1], step_size) 
                                                  for x in range(0, image_size[0], step_size)]
@@ -148,7 +161,7 @@ class BagOfWordsDescriptor(BaseDescriptor):
                                           reassignment_ratio=0.0, # http://stackoverflow.com/a/23527049
                                           n_init=5,
                                           max_iter=50)
-        self.kernel = AdditiveChi2Sampler()
+        self.scale = scale
     
     def get_feature(self, image):
         with warnings.catch_warnings():
@@ -191,11 +204,9 @@ class BagOfWordsDescriptor(BaseDescriptor):
         
         X = np.vstack(X)
         
-        # Kernel trick
-        X = self.kernel.fit_transform(X)
-        
-        # scale the data: zero mean and unit variance
-        X = scale(X)
+        if self.scale:
+            # scale the data: zero mean and unit variance
+            X = scale(X)
         
         return X, y
 
@@ -204,10 +215,10 @@ class CnnDescriptor(BaseDescriptor):
     """
     Use a pre-trained CNN to describe an image (caffe CNN).
     
-    Post-process: scale the data
+    Post-process: scale the data (if scale == True)
     """
     
-    def __init__(self, layer_name, path_to_model_def, path_to_model_weights, mean_bgr, image_size=(400, 400)):
+    def __init__(self, layer_name, path_to_model_def, path_to_model_weights, mean_bgr, image_size=(400, 400), scale=True):
         """
         Parameters
         ----------
@@ -223,6 +234,8 @@ class CnnDescriptor(BaseDescriptor):
             Must be in BGR order and in [0, 255]
         image_size: array-like of 2 int
             size of the picture
+        scale: bool
+            Whether or not scale the data in post-process
         """
         self.layer_name = layer_name
         self.mean_bgr = mean_bgr
@@ -230,6 +243,7 @@ class CnnDescriptor(BaseDescriptor):
         self.net = get_trained_network(path_to_model_def,
                                        path_to_model_weights,
                                        self.image_size)
+        self.scale = scale
     
     def get_feature(self, image):
         transformed_image = img_as_float(image).astype(np.float32)
@@ -251,7 +265,8 @@ class CnnDescriptor(BaseDescriptor):
         X = np.asarray(data)
         y = np.asarray(target)
         
-        # scale the data: zero mean and unit variance
-        scaled_X = scale(X)
+        if self.scale:
+            # scale the data: zero mean and unit variance
+            X = scale(X)
         return X, y
 
