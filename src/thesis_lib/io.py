@@ -7,7 +7,8 @@ from skimage.io import imread
 
 
 PATH_CURRENT_DIRECTORY = os.path.dirname(__file__)
-PATH_TO_SAVE = os.path.join(PATH_CURRENT_DIRECTORY, "..", "../data/")
+PATH_TO_PICKLE_SAVE = os.path.abspath(os.path.join(PATH_CURRENT_DIRECTORY, "..", "../data/"))
+
 
 def load_img_as_float(filename):
     """
@@ -52,10 +53,10 @@ def save_object(object_to_save, name_file, overwrite=False):
     https://github.com/WillahScott/facial-keypoint-detection/blob/master/scripts/tools/save4later.py
     '''
     # add extension if necessary
-    if name_file[-2:] != ".pk":
+    if name_file[-3:] != ".pk":
         name_file += ".pk"
 
-    file_path = PATH_TO_SAVE + name_file
+    file_path = PATH_TO_PICKLE_SAVE + "/" + name_file
 
     if os.path.isfile(file_path) and not overwrite:
         print("WARNING - file % exists. For overwriting specify overwrite=True." % (file_path))
@@ -82,10 +83,10 @@ def load_object(name_file):
         the loaded object
     """
     # add extension if necessary
-    if name_file[-2:] != ".pk":
+    if name_file[-3:] != ".pk":
         name_file += ".pk"
 
-    file_path = PATH_TO_SAVE + name_file
+    file_path = PATH_TO_PICKLE_SAVE + "/" + name_file
 
     print(file_path)
 
