@@ -58,7 +58,7 @@ def get_true_and_pred_cross_val(classifier, X, y, cv_iter, n_jobs=-1):
     
     Returns
     -------
-    list
+    list of array-like
         List of tuples containing:
         
         - first element: 1D array-like: ground truth labels
@@ -122,6 +122,10 @@ def cross_val_multiple_scores(classifier, X, y, n_folds=10, n_jobs=-1):
     recall = map(lambda tp: recall_score(tp[0], tp[1], average='weighted'), predicted_ys)
     f1 = map(lambda tp: f1_score(tp[0], tp[1], average='weighted'), predicted_ys)
     cm = map(lambda tp: confusion_matrix(tp[0], tp[1]), predicted_ys)
+    
+    for i, (train_idx, test_idx) in enumerate(cv_iter):
+        print(predicted_ys[i][0])
+        print(predicted_ys[i][1])
     
     nb_label = np.unique(y).size
     
