@@ -14,7 +14,7 @@ import caffe
 import pandas as pd
 
 from sklearn.linear_model import SGDClassifier
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
@@ -57,8 +57,9 @@ def argument_parser():
                              '"knn": k-nearest neighborhood ' + \
                              '"nb": naive bayes ' + \
                              '"svm": linear svm ' + \
+                             '"ada": Adaboost classifier ' + \
                              '"all": all the possible classifiers',
-                        choices=['sgd', 'rf', 'tree', 'knn', 'nb', 'svm','all'],
+                        choices=['sgd', 'rf', 'tree', 'knn', 'nb', 'svm', 'ada','all'],
                         default='sgd',
                         type=str)
     
@@ -153,7 +154,8 @@ def main():
         'tree'  : DecisionTreeClassifier(min_samples_leaf=10),
         'knn'   : KNeighborsClassifier(n_neighbors=10, leaf_size=30),
         'nb'    : GaussianNB(),
-        'svm'   : LinearSVC(fit_intercept=False, dual=False)
+        'svm'   : LinearSVC(fit_intercept=False, dual=False),
+        'ada'   : AdaBoostClassifier()
     }
     
     if args.classifier == "all":
