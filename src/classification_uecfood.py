@@ -137,8 +137,8 @@ def main():
     }
     
     arg_feature = {
-        'hsv'   : HistogramDescriptor(),
-        'rgb'   : HistogramDescriptor(bin_ch = 50, distribution='marginal'),
+        'hsv'   : HistogramMomentDescriptor(bin_lbp=98, bin_ch = 30, distribution='joint', scale=True),
+        'rgb'   : HistogramMomentDescriptor(bin_lbp=98, bin_ch = 100, distribution='marginal', scale=True),
         'cnn'   : CnnDescriptor('fc7',
                                 const.PATH_TO_DESCRI_MODEL_DEF,
                                 const.PATH_TO_DESCRI_MODEL_WEIGHTS,
