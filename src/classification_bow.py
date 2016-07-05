@@ -36,7 +36,7 @@ def main():
             read_bb_info_txt(entry.path + "/bb_info.txt", bb_info)
             df = pd.DataFrame(bb_info, columns=['_img_name', '_x1', '_y1', '_x2', '_y2', '_cat', '_abs_path'])
             
-            label = entry.name
+            label = int(entry.name)
             
             print(label)
             

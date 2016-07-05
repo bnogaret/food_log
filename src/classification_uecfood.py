@@ -28,7 +28,7 @@ from thesis_lib.uecfood import read_bb_info_txt
 from thesis_lib.io import save_object
 from thesis_lib.transform import get_sub_image_from_rectangle
 from thesis_lib.cross_validation import cross_val_multiple_scores
-from thesis_lib.descriptor import HistogramDescriptor, CnnDescriptor
+from thesis_lib.descriptor import HistogramMomentDescriptor, CnnDescriptor
 from thesis_lib.cnn import set_caffe_mode
 
 
@@ -78,19 +78,19 @@ def classify(root_directory, descriptor, classifiers):
     data = []
     target = []    
     
-    for entry in list(os.scandir(root_directory))[0:6]:
-    # for entry in os.scandir(root_directory):
+    # for entry in list(os.scandir(root_directory))[0:4]:
+    for entry in os.scandir(root_directory):
         if entry.is_dir(follow_symlinks=False):
             bb_info = []
             read_bb_info_txt(entry.path + "/bb_info.txt", bb_info)
             df = pd.DataFrame(bb_info, columns=['_img_name', '_x1', '_y1', '_x2', '_y2', '_cat', '_abs_path'])
             
-            label = entry.name
+            label = int(entry.name)
             
             print(label)
             
-            for image_path in list(glob.iglob(entry.path + '/*.jpg', recursive=False))[0:25]:
-            # for image_path in glob.iglob(entry.path + '/*.jpg', recursive=False):
+            # for image_path in list(glob.iglob(entry.path + '/*.jpg', recursive=False))[0:20]:
+            for image_path in glob.iglob(entry.path + '/*.jpg', recursive=False):
                 # print(image_path)
                 filename_without_jpg = int(os.path.basename(image_path).replace(".jpg", ''))
                 gt_bboxes = df.loc[df._img_name == filename_without_jpg].as_matrix(["_x1", "_y1", "_x2", "_y2"])
@@ -109,17 +109,15 @@ def classify(root_directory, descriptor, classifiers):
     X, y = descriptor.post_process_data(data, target)
     
     CATEGORY_FILE = root_directory + "/category.txt"
-
-    df = get_name_and_category(CATEGORY_FILE)
     
     for classifier in classifiers:
         print(classifier)
+        
         cv_scores = cross_val_multiple_scores(classifier,
                                               X=X,
                                               y=y,
-                                              n_folds=5,
+                                              n_folds=10,
                                               n_jobs=4)
-        
         print(cv_scores)
         save_object(cv_scores['cv_confusion_matrix'],
                     "cm_" + classifier.__class__.__name__,
@@ -145,7 +143,8 @@ def main():
                                 const.PATH_TO_DESCRI_MODEL_DEF,
                                 const.PATH_TO_DESCRI_MODEL_WEIGHTS,
                                 const.MEAN_BGR_VALUES,
-                                const.IMAGE_SIZE)
+                                const.IMAGE_SIZE,
+                                scale=False)
     }
     
     arg_classifier = {
