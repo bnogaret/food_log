@@ -7,8 +7,8 @@ A bouding box is represented by its coordinate as a :class:`numpy.ndarray` :math
 - :math:`(x_1, y_1)`: coordinate of the opposite point
 
 """
-
 import numpy as np
+
 
 def get_coordinate_resized_rectangles(base_shape, resized_shape, rectangles):
     """
@@ -120,7 +120,8 @@ def get_accuracy_bbox(ground_truth_bbox, predicted_bbox, threshold=0.5):
     It takes the list of predicted and ground truth bounding boxes to compute
     this three measures.
 
-    WARNING: It may count several predicted bounding boxes as correct.
+    WARNING: If more than one predicted bbox is true for a gt bbox, it will 
+    only count one of them as true (keep the one with the highest overlap).
 
     Parameters
     ----------
@@ -134,13 +135,16 @@ def get_accuracy_bbox(ground_truth_bbox, predicted_bbox, threshold=0.5):
 
     Returns
     -------
-    float, float, float:
+    :class:`np.ndarray` of bbox coordinate
+        The correct bbox
+    :class:`np.ndarray` of 3 float values:
         accuracy, precision and recall values
 
     References
     ----------
     https://en.wikipedia.org/wiki/Precision_and_recall
     http://host.robots.ox.ac.uk/pascal/VOC/voc2012/devkit_doc.pdf
+    """
     """
     correct = 0
     for gt in ground_truth_bbox:
@@ -151,8 +155,48 @@ def get_accuracy_bbox(ground_truth_bbox, predicted_bbox, threshold=0.5):
     accuracy = correct / (correct + len(predicted_bbox) - correct + len(ground_truth_bbox) - correct)
     precision = correct / len(predicted_bbox)
     recall = correct / len(ground_truth_bbox)
-    return accuracy, precision, recall
-
+    return np.asarray([accuracy, precision, recall]).astype(np.float32)
+    """
+    gt = np.array(ground_truth_bbox)
+    idxs = np.arange(gt.shape[0])
+    
+    print(idxs)
+    
+    list_correct = []
+    
+    for p in predicted_bbox:
+        # grab the coordinates of the bounding boxes
+        x1 = gt[idxs, 0]
+        y1 = gt[idxs, 1]
+        x2 = gt[idxs, 2]
+        y2 = gt[idxs, 3]
+        
+        # compute the intersection and union
+        # max(0, min(XA2, XB2) - max(XA1, XB1)) * max(0, min(YA2, YB2) - max(YA1, YB1)))
+        intersection = np.maximum(0, np.minimum(x2, p[2]) - np.maximum(x1, p[0])) * \
+                       np.maximum(0, np.minimum(y2, p[3]), - np.maximum(y1, p[0]))
+        
+        area = (x2 - x1 + 1) * (y2 - y1 + 1)
+        area_p = (p[2] - p [0] + 1) * (p[3] - p[1] + 1)
+        
+        union = area + area_p - intersection
+        
+        # compute intersection over union
+        overlap = intersection / union
+        
+        # get index of the highest value of overlap
+        idx_max = np.argmax(overlap)
+        
+        if overlap[idx_max] > threshold:
+            idxs = np.delete(idxs, idx_max)
+            list_correct.append(p)
+    
+    correct = len(list_correct)
+    accuracy = correct / (correct + len(predicted_bbox) - correct + len(ground_truth_bbox) - correct)
+    precision = correct / len(predicted_bbox)
+    recall = correct / len(ground_truth_bbox)
+    
+    return np.asarray(list_correct).astype(np.int), np.asarray([accuracy, precision, recall]).astype(np.float32)
 
 def overlapping_suppression(boxes, confidence=None, overlap_threshold=0.4):
     """
@@ -191,7 +235,7 @@ def overlapping_suppression(boxes, confidence=None, overlap_threshold=0.4):
     x2 = boxes[:, 2]
     y2 = boxes[:, 3]
 
-    # compute the area of the bounding boxes and sort the bounding
+    # compute the area of the bounding boxes
     area = (x2 - x1 + 1) * (y2 - y1 + 1)
 
     # sort the index by either the confidence or the y-coordinate of the second point
@@ -206,7 +250,6 @@ def overlapping_suppression(boxes, confidence=None, overlap_threshold=0.4):
     while len(idxs) > 0:
         # grab the last index in the indexes list and add the
         # index value to the list of picked indexes
-        # last = len(idxs) - 1
         last = len(idxs) - 1
         i = idxs[last]
         pick.append(i)
@@ -227,6 +270,7 @@ def overlapping_suppression(boxes, confidence=None, overlap_threshold=0.4):
         overlap = (w * h) / area[idxs[:last]]
 
         # delete all indexes from the index list that have
+        # an overlap > threshold
         idxs = np.delete(idxs, np.concatenate(([last],
                 np.where(overlap > overlap_threshold)[0])))
 
