@@ -1,5 +1,6 @@
 #! /usr/bin/env python3
 import os
+import glob
 
 import pandas as pd
 import numpy as np
@@ -25,20 +26,16 @@ def main():
     print(df._category.unique())
 
     n = df['_name'].to_dict()
-    print(n)
-    
-    list_file_cm = ['cm_bow.pk', 'cm_DecisionTreeClassifier.pk', 'cm_GaussianNB.pk',
-                    'cm_KNeighborsClassifier.pk', 'cm_lbp_hsv.pk', 'cm_LinearSVC.pk', 
-                    'cm_RandomForestClassifier.pk', 'cm_SGDClassifier.pk']
     
     eps = 1e-5 # to avoid 0.0 divide
     
-    for file_cm in list_file_cm[:1]:
-        filename = PATH_TO_PICKLE_SAVE + "/" + file_cm
-        print(filename)
+    for file_cm in glob.iglob(PATH_TO_PICKLE_SAVE + "/cm_CnnDescriptor_RandomForestClassifier.pk"):
+        filename = os.path.abspath(file_cm)
+        basename = os.path.basename(filename)
+        print(basename)
         
         if os.path.isfile(filename):
-            cm = load_object(file_cm)
+            cm = load_object(basename)
             # print(cm)
             
             # Divide by the number of elements
@@ -63,5 +60,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 
