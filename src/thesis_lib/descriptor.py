@@ -229,7 +229,7 @@ class CnnDescriptor(BaseDescriptor):
             of each layer.
         path_to_model_weights: str
             Path to the trained values for the corresponding model.
-        mean_bgr_value: :class:`numpy.ndarray` of 3 int
+        mean_bgr: :class:`numpy.ndarray` of 3 int
             Set the mean to subtract for centering the data.
             Must be in BGR order and in [0, 255]
         image_size: array-like of 2 int
