@@ -25,19 +25,19 @@ def get_coordinate_resized_rectangles(base_shape, resized_shape, rectangles):
 
     Returns
     -------
-    array-like of 4 floats
+    :class:`np.ndarray`
         Resized coordinates
     """
     x_scale = resized_shape[0]/base_shape[1]
     y_scale = resized_shape[1]/base_shape[0]
-    resized_rectangles = []
-    for rectangle in rectangles:
-        resized_rectangles.append([
-                int(rectangle[0] * x_scale),
-                int(rectangle[1] * y_scale),
-                int(rectangle[2] * x_scale),
-                int(rectangle[3] * y_scale)
-                ])
+    
+    resized_rectangles = np.array(rectangles).astype(np.float)
+    
+    resized_rectangles[:, 0] *= x_scale
+    resized_rectangles[:, 1] *= y_scale
+    resized_rectangles[:, 2] *= x_scale
+    resized_rectangles[:, 3] *= y_scale
+    
     return resized_rectangles
 
 

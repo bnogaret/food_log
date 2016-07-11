@@ -7,7 +7,9 @@ import unittest
 import numpy as np
 from numpy.testing import assert_array_almost_equal, assert_array_equal
 
-from thesis_lib.bbox import get_overlap_ratio_bbox, get_correct_bbox
+from thesis_lib.bbox import (get_overlap_ratio_bbox,
+                             get_correct_bbox,
+                             get_coordinate_resized_rectangles)
 
 # python -m unittest discover
 
@@ -18,6 +20,30 @@ class OverlapTest(unittest.TestCase):
 
     def tearDown(self):
         pass
+    
+    def test_get_coordinate_resized_rectangles_simple_smaller(self):
+        bbox = np.asarray([[0, 0, 100, 100], [10, 10, 80, 80]])
+        res = get_coordinate_resized_rectangles((100, 100), (50, 50), bbox)
+        
+        expec = np.asarray([[0, 0, 50, 50], [5, 5, 40, 40]])
+        
+        assert_array_equal(res, expec)
+    
+    def test_get_coordinate_resized_rectangles_simple_bigger(self):
+        bbox = np.asarray([[0, 0, 100, 100], [10, 10, 80, 80]])
+        res = get_coordinate_resized_rectangles((50, 50), (100, 100), bbox)
+        
+        expec = np.asarray([[0, 0, 200, 200], [20, 20, 160, 160]])
+        
+        assert_array_equal(res, expec)
+    
+    def test_get_coordinate_resized_rectangles_with_category_column(self):
+        bbox = np.asarray([[0, 0, 100, 100, 20], [10, 10, 80, 80, 1]])
+        res = get_coordinate_resized_rectangles((50, 50), (100, 100), bbox)
+        
+        expec = np.asarray([[0, 0, 200, 200, 20], [20, 20, 160, 160, 1]])
+        
+        assert_array_equal(res, expec)
     
     def test_simple_overlap(self):
         bbox = np.asarray([[0, 0, 100, 100], [50, 50, 100, 100]])
