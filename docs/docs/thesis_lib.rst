@@ -60,6 +60,15 @@ measure
     :members:
     :undoc-members:
 
+segmenter
+==========
+
+.. automodule:: thesis_lib.segmenter
+    :members:
+    :undoc-members:
+    :special-members: __init__
+    :inherited-members:
+
 tool
 ====
 
