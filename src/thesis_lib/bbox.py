@@ -136,31 +136,34 @@ def get_correct_bbox(ground_truth_bbox, predicted_bbox, threshold=0.5):
     Returns
     -------
     :class:`np.ndarray` of bbox coordinate
-        The correct bbox
+        The correct predicted bbox
+    :class:`np.ndarray` of bbox coordinate
+        The found ground truth bbox
     :class:`np.ndarray` of 3 float values:
-        accuracy, precision and recall values
+        Metric results: accuracy, precision and recall values
 
     References
     ----------
     https://en.wikipedia.org/wiki/Precision_and_recall
     http://host.robots.ox.ac.uk/pascal/VOC/voc2012/devkit_doc.pdf
     """
+    # Available ground-truth bbox
     gt = np.array(ground_truth_bbox)
-    idxs = np.arange(gt.shape[0])
     
-    list_correct = []
+    correct_predictions = []
+    found_gt_bboxes = []
     
     for p in predicted_bbox:
         # grab the coordinates of the bounding boxes
-        x1 = gt[idxs, 0]
-        y1 = gt[idxs, 1]
-        x2 = gt[idxs, 2]
-        y2 = gt[idxs, 3]
+        x1 = gt[:, 0]
+        y1 = gt[:, 1]
+        x2 = gt[:, 2]
+        y2 = gt[:, 3]
         
         # compute the intersection and union
         # max(0, min(XA2, XB2) - max(XA1, XB1)) * max(0, min(YA2, YB2) - max(YA1, YB1)))
         intersection = np.maximum(0, np.minimum(x2, p[2]) - np.maximum(x1, p[0])) * \
-                       np.maximum(0, np.minimum(y2, p[3]), - np.maximum(y1, p[0]))
+                       np.maximum(0, np.minimum(y2, p[3]), - np.maximum(y1, p[1]))
         
         area = (x2 - x1 + 1) * (y2 - y1 + 1)
         area_p = (p[2] - p [0] + 1) * (p[3] - p[1] + 1)
@@ -174,18 +177,23 @@ def get_correct_bbox(ground_truth_bbox, predicted_bbox, threshold=0.5):
         idx_max = np.argmax(overlap)
         
         if overlap[idx_max] > threshold:
-            idxs = np.delete(idxs, idx_max)
-            list_correct.append(p)
+            # The current prediction is correct
+            correct_predictions.append(p)
+            found_gt_bboxes.append(gt[idx_max].copy())
+            # gt = np.delete(gt, idx_max, axis=0) # Delete the index from the available ground truth bboxes
+            gt[idx_max] = 0 
         
-        if idxs.size == 0:
+        if gt.size == 0: # No more ground truth available, we can leave the loop
             break
     
-    correct = len(list_correct)
+    correct = len(correct_predictions)
     accuracy = correct / (correct + len(predicted_bbox) - correct + len(ground_truth_bbox) - correct)
     precision = correct / len(predicted_bbox)
     recall = correct / len(ground_truth_bbox)
     
-    return np.asarray(list_correct).astype(np.int), np.asarray([accuracy, precision, recall]).astype(np.float32)
+    return np.asarray(correct_predictions).astype(np.int), \
+           np.asarray(found_gt_bboxes).astype(np.int), \
+           np.asarray([accuracy, precision, recall]).astype(np.float32)
 
 def overlapping_suppression(boxes, confidence=None, overlap_threshold=0.4):
     """
