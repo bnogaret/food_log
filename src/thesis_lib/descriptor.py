@@ -1,7 +1,6 @@
 import abc
 import warnings
 
-import caffe
 import cv2
 import numpy as np
 
@@ -9,7 +8,6 @@ from skimage import img_as_ubyte, img_as_float
 from skimage.color import rgb2gray, rgb2hsv
 from sklearn.preprocessing import scale
 from sklearn.cluster import MiniBatchKMeans
-from skimage.color import rgb2gray, rgb2hsv
 
 from .histogram import local_binary_pattern_histogram, color_histogram
 from .measure import get_hu_moment_from_image
@@ -72,10 +70,10 @@ class HistogramMomentDescriptor(BaseDescriptor):
     - mean and var for each picture channel
     - hu moments
 
-    Post-process: scale the data (if scale == True)
+    Post-process: scale the data (if scale_data == True)
     """
 
-    def __init__(self, bin_lbp = 48, bin_ch = 20, distribution='joint', scale=True):
+    def __init__(self, bin_lbp = 48, bin_ch = 20, distribution='joint', scale_data=True):
         """
         Parameters
         ----------
@@ -91,7 +89,7 @@ class HistogramMomentDescriptor(BaseDescriptor):
         self.bin_lbp = bin_lbp
         self.bin_ch = bin_ch
         self.distribution = distribution
-        self.scale = scale
+        self.scale_data = scale_data
 
     def get_feature(self, image):
         gray = rgb2gray(image)
@@ -119,7 +117,7 @@ class HistogramMomentDescriptor(BaseDescriptor):
         X = np.asarray(data)
         y = np.asarray(target)
 
-        if self.scale:
+        if self.scale_data:
             # scale the data: zero mean and unit variance
             X = scale(X)
         return X, y
@@ -133,10 +131,10 @@ class BagOfWordsDescriptor(BaseDescriptor):
 
     - create the visual words using the KNN method
     - get histogram for each data
-    - scale the data (if scale == True)
+    - scale the data (if scale_data == True)
     """
 
-    def __init__(self, image_size=(400, 400), vocabulary_size=1000, step_size=4, scale=True):
+    def __init__(self, image_size=(400, 400), vocabulary_size=1000, step_size=4, scale_data=True):
         """
         Parameters
         ----------
@@ -146,7 +144,7 @@ class BagOfWordsDescriptor(BaseDescriptor):
             Number of visual words
         step_size: int
             Size of the dense grid
-        scale: bool
+        scale_data: bool
             Whether or not scale the data in post-process
         """
         self.kp = [cv2.KeyPoint(x, y, step_size) for y in range(0, image_size[1], step_size)
@@ -161,7 +159,7 @@ class BagOfWordsDescriptor(BaseDescriptor):
                                           reassignment_ratio=0.0, # http://stackoverflow.com/a/23527049
                                           n_init=5,
                                           max_iter=50)
-        self.scale = scale
+        self.scale_data = scale_data
 
     def get_feature(self, image):
         with warnings.catch_warnings():
@@ -204,7 +202,7 @@ class BagOfWordsDescriptor(BaseDescriptor):
 
         X = np.vstack(X)
 
-        if self.scale:
+        if self.scale_data:
             # scale the data: zero mean and unit variance
             X = scale(X)
 
@@ -215,10 +213,10 @@ class CnnDescriptor(BaseDescriptor):
     """
     Use a pre-trained CNN to describe an image (caffe CNN).
 
-    Post-process: scale the data (if scale == True)
+    Post-process: scale the data (if scale_data == True)
     """
 
-    def __init__(self, layer_name, path_to_model_def, path_to_model_weights, mean_bgr, image_size=(400, 400), scale=True):
+    def __init__(self, layer_name, path_to_model_def, path_to_model_weights, mean_bgr, image_size=(400, 400), scale_data=True):
         """
         Parameters
         ----------
@@ -234,7 +232,7 @@ class CnnDescriptor(BaseDescriptor):
             Must be in BGR order and in [0, 255]
         image_size: array-like of 2 int
             size of the picture
-        scale: bool
+        scale_data: bool
             Whether or not scale the data in post-process
         """
         self.layer_name = layer_name
@@ -243,7 +241,7 @@ class CnnDescriptor(BaseDescriptor):
         self.net = get_trained_network(path_to_model_def,
                                        path_to_model_weights,
                                        self.image_size)
-        self.scale = scale
+        self.scale_data = scale_data
 
     def get_feature(self, image):
         transformed_image = img_as_float(image).astype(np.float32)
@@ -265,7 +263,7 @@ class CnnDescriptor(BaseDescriptor):
         X = np.asarray(data)
         y = np.asarray(target)
 
-        if self.scale:
+        if self.scale_data:
             # scale the data: zero mean and unit variance
             X = scale(X)
         return X, y

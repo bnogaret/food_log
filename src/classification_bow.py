@@ -39,63 +39,62 @@ def main():
             bb_info = []
             read_bb_info_txt(entry.path + "/bb_info.txt", bb_info)
             df = pd.DataFrame(bb_info, columns=['_img_name', '_x1', '_y1', '_x2', '_y2', '_cat', '_abs_path'])
-            
+
             label = int(entry.name)
-            
+
             print(label)
-            
+
             # for image_path in list(glob.iglob(entry.path + '/*.jpg', recursive=False))[0:25]:
             for image_path in glob.iglob(entry.path + '/*.jpg', recursive=False):
                 filename_without_jpg = int(os.path.basename(image_path).replace(".jpg", ''))
                 gt_bboxes = df.loc[df._img_name == filename_without_jpg].as_matrix(["_x1", "_y1", "_x2", "_y2"])
-                
+
                 image = imread(image_path)
-                
+
                 for bbox in gt_bboxes:
                     # print(bbox)
-                    
+
                     sub_image = get_sub_image_from_rectangle(image, bbox, True)
                     sub_image = resize(sub_image, const.IMAGE_SIZE)
-                    
+
                     data.append(bow.get_feature(sub_image))
                     target.append(label)
-    
+
     print(len(data), len(target))
-    
+
     X, y = bow.post_process_data(data, target)
-    
+
     print("X (type: %s) shape: %s || target (type: %s) shape: %s" % (X.dtype, X.shape, y.dtype, y.shape))
-    
+
     # "Free memory" to avoid MemoryError
     data = []
     bow = []
     target = []
     print("gc.collect() = ", gc.collect())
-    
+
     chi2 = AdditiveChi2Sampler(sample_steps=2)
-    
+
     X = chi2.fit_transform(X)
     # X = scale(X)
 
     print("X (type: %s) shape: %s || target (type: %s) shape: %s" % (X.dtype, X.shape, y.dtype, y.shape))
     # classifier = RandomForestClassifier(n_estimators=500, min_samples_leaf=20, n_jobs=4)
     classifier = LinearSVC(fit_intercept=False, dual=False)
-    
+
     print(classifier)
-    
+
     cv_scores = cross_val_multiple_scores(classifier,
                                           X=X,
                                           y=y,
                                           n_folds=10,
                                           n_jobs=1)
-    
+
     print(cv_scores)
-    
+
     save_object(cv_scores['cv_confusion_matrix'],
                 "cm_bow",
                 overwrite=True)
-    
-    
+
+
 if __name__ == "__main__":
     main()
-
