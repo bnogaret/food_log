@@ -148,8 +148,6 @@ def get_accuracy_bbox(ground_truth_bbox, predicted_bbox, threshold=0.5):
     gt = np.array(ground_truth_bbox)
     idxs = np.arange(gt.shape[0])
     
-    print(idxs)
-    
     list_correct = []
     
     for p in predicted_bbox:
