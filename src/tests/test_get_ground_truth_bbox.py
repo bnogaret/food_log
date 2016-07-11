@@ -17,7 +17,6 @@ class GetGroundTruthBboxTest(unittest.TestCase):
         self.df = get_ground_truth_bbox(const.PATH_TO_ROOT_UECFOOD256, verbose=False)
 
     def test_simple_overlap(self):
-        
         # Check right number of bbox
         self.assertEqual(self.df.shape, (31645, 8))
         # Check right number of different category

@@ -145,18 +145,6 @@ def get_accuracy_bbox(ground_truth_bbox, predicted_bbox, threshold=0.5):
     https://en.wikipedia.org/wiki/Precision_and_recall
     http://host.robots.ox.ac.uk/pascal/VOC/voc2012/devkit_doc.pdf
     """
-    """
-    correct = 0
-    for gt in ground_truth_bbox:
-        for p in predicted_bbox:
-            if (get_overlap_ratio_bbox(gt, p) > threshold):
-                correct += 1
-
-    accuracy = correct / (correct + len(predicted_bbox) - correct + len(ground_truth_bbox) - correct)
-    precision = correct / len(predicted_bbox)
-    recall = correct / len(ground_truth_bbox)
-    return np.asarray([accuracy, precision, recall]).astype(np.float32)
-    """
     gt = np.array(ground_truth_bbox)
     idxs = np.arange(gt.shape[0])
     
@@ -190,6 +178,9 @@ def get_accuracy_bbox(ground_truth_bbox, predicted_bbox, threshold=0.5):
         if overlap[idx_max] > threshold:
             idxs = np.delete(idxs, idx_max)
             list_correct.append(p)
+        
+        if idxs.size == 0:
+            break
     
     correct = len(list_correct)
     accuracy = correct / (correct + len(predicted_bbox) - correct + len(ground_truth_bbox) - correct)
