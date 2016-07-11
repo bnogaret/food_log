@@ -8,13 +8,14 @@ import argparse
 # 1 - info
 # 2 - warnings
 # 3 - errors
-os.environ['GLOG_minloglevel'] = '3'
+os.environ['GLOG_minloglevel'] = '2'
 
 import timeit
 
 import caffe
 import numpy as np
 from matplotlib import pyplot as plt
+from skimage.io import imread
 from skimage.transform import resize
 
 import init_path
@@ -23,6 +24,7 @@ from thesis_lib.draw import draw_bounding_boxes, display_arrays
 from thesis_lib.bbox import *
 from thesis_lib.cnn import *
 from thesis_lib.io import load_object
+from thesis_lib.segmenter import CnnSegmenter
 
 import constants as const
 
@@ -53,7 +55,7 @@ def find_image_path(img_name):
         return filename
 
 
-def get_ground_truth_bbox(img_path, initial_image_size):
+def get_ground_truth_bbox(path_image, initial_image_size):
     # Load the pickle save dataframe containing 7 columns:
     # '_img_name' (int) : image name (exclusing the '.jpg')
     # '_x1' (int), '_y1' (int) : coordinate of one of the rectangle point
@@ -61,23 +63,21 @@ def get_ground_truth_bbox(img_path, initial_image_size):
     # '_cat' (int) : class of the bbox
     # '_abs_path' (str) : path to the file
     # _multi_item (bool) : whether several categories are on this picture
-    _abs_path = os.path.abspath(img_path)
-    ground_truth_bbox = load_object(const.PICKLE_FILENAME_256_GT_BBOX)
+    abs_path = os.path.abspath(path_image)
+    df = load_object(const.PICKLE_FILENAME_256_GT_BBOX)
 
     # Get the row of the current file
-    ground_truth = ground_truth_bbox.loc[ground_truth_bbox._abs_path == _abs_path]
+    bbox = df.loc[(df._abs_path == abs_path)]
     
-    if ground_truth._multi_item.iloc[0] == True:
-        ground_truth = ground_truth_bbox.loc[ground_truth_bbox._img_name.isin(ground_truth._img_name) & ground_truth_bbox._multi_item.isin(ground_truth._multi_item)]
-    # Extract the numpy array corresponding to the bbox coordinates
-    ground_truth_box = ground_truth.as_matrix(["_x1", "_y1", "_x2", "_y2"])
-
-    resized_ground_truth = get_coordinate_resized_rectangles(initial_image_size,
-                                                             const.IMAGE_SIZE,
-                                                             ground_truth_box)
-
-    print(ground_truth)
-    print(resized_ground_truth)
+    # print(bbox)
+    
+    if bbox._multi_item.all(axis=0):
+        # Case when the same image has multi-food items - multi food labels (so different absolute path)
+        image_name = int(os.path.basename(abs_path).replace(".jpg", ''))
+        bbox = df.loc[(df._img_name == image_name) & (df._multi_item == True)]
+    
+    gt_bboxes = bbox.as_matrix(["_x1", "_y1", "_x2", "_y2"])
+    resized_ground_truth = get_coordinate_resized_rectangles(initial_image_size, const.IMAGE_SIZE, gt_bboxes)
 
     return resized_ground_truth
 
@@ -92,51 +92,41 @@ def save_segmentation_image(img_name, threshold_net, threshold_overlap):
     
     # In my case, I'm using the cpu. To change if a GPU is enable.
     set_caffe_mode()
+    
+    image = imread(path_img)
 
-    cnn_bbox_coordinates = np.loadtxt(const.PATH_TO_SEG_BBOX, np.float, delimiter=',')
-
-    net = get_trained_network(const.PATH_TO_SEG_MODEL_DEF,
-                              const.PATH_TO_SEG_MODEL_WEIGHTS,
-                              const.IMAGE_SIZE)
-
-    transformer = get_transformer_rgb_image(net.blobs['data'].data.shape, const.MEAN_BGR_VALUE)
-
-    image = caffe.io.load_image(path_img)
-    transformed_image = transformer.preprocess('data', image)
-    print(image.shape)
-    print(transformed_image.shape)
-
-    # Feed the data to the network
-    net.blobs['data'].data[...] = transformed_image
-
-    output = net.forward()
-    prob = output['prob'][0]
-    # print(prob)
-    print("Prob shape ", prob.shape)
+    segmenter = CnnSegmenter(const.PATH_TO_SEG_MODEL_DEF,
+                             const.PATH_TO_SEG_MODEL_WEIGHTS,
+                             const.PATH_TO_SEG_BBOX,
+                             const.MEAN_BGR_VALUES,
+                             const.IMAGE_SIZE,
+                             threshold_net,
+                             threshold_overlap)
+    
+    boxes = segmenter.get_bbox(image)
+    
+    # Case where no overlapping_suppresion is done
+    segmenter = CnnSegmenter(const.PATH_TO_SEG_MODEL_DEF,
+                             const.PATH_TO_SEG_MODEL_WEIGHTS,
+                             const.PATH_TO_SEG_BBOX,
+                             const.MEAN_BGR_VALUES,
+                             const.IMAGE_SIZE,
+                             threshold_net,
+                             1.0)
+    
+    predicted_boxes = segmenter.get_bbox(image)
 
     # Dipslay the output of the first layer (first 4 only)
-    feat = net.blobs['conv1/7x7_s2'].data[0, :4]
+    feat = segmenter.net.blobs['conv1/7x7_s2'].data[0, :4]
     print(feat.shape)
     display_arrays(feat,
-                   const.PATH_TO_IMAGE_DIR + "first_conv_layer_" + str(img_name) + ".jpg",
+                   const.PATH_TO_IMAGE_DIR + "/first_conv_layer_" + str(img_name) + ".jpg",
                    title="Visualisation of the first convolutional layer's output")
-
-    # Select indices superior to a threshold
-    predicted_index = np.where(prob > threshold_net)[0]
-    if predicted_index.size == 0:
-        predicted_index = np.where(prob == prob.max())[0]
-
-    print(cnn_bbox_coordinates.shape, cnn_bbox_coordinates.dtype)
-    print(cnn_bbox_coordinates[predicted_index])
-
-    # np.ceil: return a float dtype
-    predicted_boxes = np.ceil(cnn_bbox_coordinates[predicted_index] * 224)
-    resized_picture = resize(image, const.IMAGE_SIZE)
-
-    boxes = overlapping_suppression(predicted_boxes, prob[predicted_index], threshold_overlap)
-
+    
     resized_ground_truth = get_ground_truth_bbox(path_img, image.shape[0:2])
-
+    
+    resized_picture = resize(image, const.IMAGE_SIZE)
+    
     fig = plt.figure(figsize=(6, 14))
 
     ax = plt.subplot(311)
