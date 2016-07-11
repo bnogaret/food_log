@@ -17,7 +17,7 @@ from .cnn import transform_rgb_image, get_trained_network
 
 
 __all__ = ['BaseDescriptor',
-           'HistogramDescriptor',
+           'HistogramMomentDescriptor',
            'BagOfWordsDescriptor',
            'CnnDescriptor']
 
@@ -26,29 +26,29 @@ class BaseDescriptor(metaclass=abc.ABCMeta):
     """
     Abstract class common for my image descriptors.
     """
-    
+
     @abc.abstractmethod
     def get_feature(self, image):
         """
         Extract and return the feature from the image
-        
+
         Parameters
         ----------
         image: :class:`numpy.ndarray`
             **RGB** image
-        
+
         Returns
         -------
         :class:`numpy.ndarray`
             Feature
         """
         return
-    
+
     @abc.abstractmethod
     def post_process_data(self, data, target):
         """
         Post process the list of feature extracted by this class
-        
+
         Parameters
         ----------
         data: list of :class:`numpy.ndarray`
@@ -65,16 +65,16 @@ class BaseDescriptor(metaclass=abc.ABCMeta):
 
 class HistogramMomentDescriptor(BaseDescriptor):
     """
-    Histogram descriptor: 
-    
+    Histogram descriptor:
+
     - local binary pattern histogram
     - color histogram: joint histogram on H and S channels or marginal histogram for R, G and B channels
     - mean and var for each picture channel
     - hu moments
-    
+
     Post-process: scale the data (if scale == True)
     """
-    
+
     def __init__(self, bin_lbp = 48, bin_ch = 20, distribution='joint', scale=True):
         """
         Parameters
@@ -92,33 +92,33 @@ class HistogramMomentDescriptor(BaseDescriptor):
         self.bin_ch = bin_ch
         self.distribution = distribution
         self.scale = scale
-    
+
     def get_feature(self, image):
         gray = rgb2gray(image)
-        
+
         lbph = local_binary_pattern_histogram(gray, self.bin_lbp, 8)
-        
+
         if self.distribution == "joint":
             hsv = rgb2hsv(image)
             ch = color_histogram(hsv[:,:,:2], self.bin_ch, ranges=((0,1),(0,1)), distribution=self.distribution)
         else:
             ch = color_histogram(image, self.bin_ch, ranges=(0,1), distribution=self.distribution)
-        
+
         # Mean of each RGB channel
         mean = np.mean(image, axis=(0,1))
         # Variance of each RGB channel
         var = np.var(image, axis=(0,1))
-        
+
         hu = get_hu_moment_from_image(gray)
-        
+
         feature = np.hstack((lbph, ch, mean, var, hu))
-        
+
         return feature
 
     def post_process_data(self, data, target):
         X = np.asarray(data)
         y = np.asarray(target)
-        
+
         if self.scale:
             # scale the data: zero mean and unit variance
             X = scale(X)
@@ -128,14 +128,14 @@ class HistogramMomentDescriptor(BaseDescriptor):
 class BagOfWordsDescriptor(BaseDescriptor):
     """
     Bag of words feature description.
-    
-    Post-process: 
-    
+
+    Post-process:
+
     - create the visual words using the KNN method
     - get histogram for each data
     - scale the data (if scale == True)
     """
-    
+
     def __init__(self, image_size=(400, 400), vocabulary_size=1000, step_size=4, scale=True):
         """
         Parameters
@@ -149,7 +149,7 @@ class BagOfWordsDescriptor(BaseDescriptor):
         scale: bool
             Whether or not scale the data in post-process
         """
-        self.kp = [cv2.KeyPoint(x, y, step_size) for y in range(0, image_size[1], step_size) 
+        self.kp = [cv2.KeyPoint(x, y, step_size) for y in range(0, image_size[1], step_size)
                                                  for x in range(0, image_size[0], step_size)]
         self.descriptor = cv2.xfeatures2d.SIFT_create()
         self.vocabulary_size = vocabulary_size
@@ -162,27 +162,27 @@ class BagOfWordsDescriptor(BaseDescriptor):
                                           n_init=5,
                                           max_iter=50)
         self.scale = scale
-    
+
     def get_feature(self, image):
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             gray = img_as_ubyte(rgb2gray(image))
-        
+
         _, feature = self.descriptor.compute(gray, self.kp)
-        
+
         # Root feature:
         eps = 1e-5 # not to divide by 0.0
         # L1 normalize
         feature = feature / (feature.sum(axis=1, keepdims=True) + eps)
         # take the square root
         feature = np.sqrt(feature)
-        
+
         return feature
 
     def post_process_data(self, data, target):
         y = np.asarray(target)
         words = []
-        
+
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
 
@@ -190,7 +190,7 @@ class BagOfWordsDescriptor(BaseDescriptor):
                 self.clustering.partial_fit(d)
             for d in data:
                 words.append(self.clustering.predict(d))
-        
+
         words = np.vstack(words)
         print("Cluster prediction: ", words.shape)
 
@@ -199,25 +199,25 @@ class BagOfWordsDescriptor(BaseDescriptor):
         for word in words:
             histogram = np.bincount(word, minlength=self.vocabulary_size).astype(np.float)
             histogram /= max(histogram.sum(), 1)
-            
+
             X.append(histogram.flatten())
-        
+
         X = np.vstack(X)
-        
+
         if self.scale:
             # scale the data: zero mean and unit variance
             X = scale(X)
-        
+
         return X, y
 
 
 class CnnDescriptor(BaseDescriptor):
     """
     Use a pre-trained CNN to describe an image (caffe CNN).
-    
+
     Post-process: scale the data (if scale == True)
     """
-    
+
     def __init__(self, layer_name, path_to_model_def, path_to_model_weights, mean_bgr, image_size=(400, 400), scale=True):
         """
         Parameters
@@ -244,10 +244,10 @@ class CnnDescriptor(BaseDescriptor):
                                        path_to_model_weights,
                                        self.image_size)
         self.scale = scale
-    
+
     def get_feature(self, image):
         transformed_image = img_as_float(image).astype(np.float32)
-        
+
         transformed_image = transform_rgb_image(transformed_image,
                                                 self.image_size,
                                                 self.mean_bgr)
@@ -256,7 +256,7 @@ class CnnDescriptor(BaseDescriptor):
 
         # perform classification
         output = self.net.forward()
-        
+
         # Get value of the last layer before classification layers
         feature = self.net.blobs[self.layer_name].data.flatten()
         return feature
@@ -264,7 +264,7 @@ class CnnDescriptor(BaseDescriptor):
     def post_process_data(self, data, target):
         X = np.asarray(data)
         y = np.asarray(target)
-        
+
         if self.scale:
             # scale the data: zero mean and unit variance
             X = scale(X)
