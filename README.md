@@ -29,6 +29,9 @@ Install:
     ```bash
     pip install -r requirements.txt
     ```
+- Download and unzip in /data/ directory [UEC FOOD256](http://foodcam.mobi/dataset256.html) and/or [UEC FOOD100](http://foodcam.mobi/dataset100.html).
+
+    :warning: **Be careful, I have modified added / modified some files from these archives.**
 
 ## Tests
 
