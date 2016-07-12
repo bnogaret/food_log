@@ -17,9 +17,9 @@ def get_coordinate_resized_rectangles(base_shape, resized_shape, rectangles):
     Parameters
     ---------
     base_shape: array-like of 2
-        Size of the picture
+        Size of the picture (row (y), column(x))
     resized_shape: array-like of 2
-        New size of the picture
+        New size of the picture (row (y), column(x))
     rectangles: array-like of 4
         List of rectangle coordinates to resized.
 
@@ -28,8 +28,8 @@ def get_coordinate_resized_rectangles(base_shape, resized_shape, rectangles):
     :class:`np.ndarray`
         Resized coordinates
     """
-    x_scale = resized_shape[0]/base_shape[1]
-    y_scale = resized_shape[1]/base_shape[0]
+    x_scale = resized_shape[1]/base_shape[1]
+    y_scale = resized_shape[0]/base_shape[0]
     
     resized_rectangles = np.array(rectangles).astype(np.float)
     
@@ -163,10 +163,10 @@ def get_correct_bbox(ground_truth_bbox, predicted_bbox, threshold=0.5):
         # compute the intersection and union
         # max(0, min(XA2, XB2) - max(XA1, XB1)) * max(0, min(YA2, YB2) - max(YA1, YB1)))
         intersection = np.maximum(0, np.minimum(x2, p[2]) - np.maximum(x1, p[0])) * \
-                       np.maximum(0, np.minimum(y2, p[3]), - np.maximum(y1, p[1]))
+                       np.maximum(0, np.minimum(y2, p[3]) - np.maximum(y1, p[1]))
         
         area = (x2 - x1 + 1) * (y2 - y1 + 1)
-        area_p = (p[2] - p [0] + 1) * (p[3] - p[1] + 1)
+        area_p = (p[2] - p[0] + 1) * (p[3] - p[1] + 1)
         
         union = area + area_p - intersection
         
@@ -181,10 +181,7 @@ def get_correct_bbox(ground_truth_bbox, predicted_bbox, threshold=0.5):
             correct_predictions.append(p)
             found_gt_bboxes.append(gt[idx_max].copy())
             # gt = np.delete(gt, idx_max, axis=0) # Delete the index from the available ground truth bboxes
-            gt[idx_max] = 0 
-        
-        if gt.size == 0: # No more ground truth available, we can leave the loop
-            break
+            gt[idx_max] = 0
     
     correct = len(correct_predictions)
     accuracy = correct / (correct + len(predicted_bbox) - correct + len(ground_truth_bbox) - correct)

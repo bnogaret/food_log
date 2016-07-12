@@ -51,7 +51,7 @@ class OverlapTest(unittest.TestCase):
         
         self.assertEqual(res, .25)
     
-    def test_non_overlap(self):
+    def test_simple_non_overlap(self):
         bbox = np.asarray([[0, 0, 50, 50], [100, 100, 200, 200]])
         res = get_overlap_ratio_bbox(bbox[0], bbox[1])
         
@@ -66,6 +66,20 @@ class OverlapTest(unittest.TestCase):
         expect_correct = np.asarray([[0, 0, 40, 40], [100, 100, 900, 900]])
         expect_gt = np.asarray([[0, 0, 50, 50], [0, 0, 1000, 1000]])
         expec_metrics = np.asarray((2/5, 2/3, 2/4))
+        
+        assert_array_equal(res_correct, expect_correct)
+        assert_array_equal(res_gt, expect_gt)
+        assert_array_almost_equal(res_metrics, expec_metrics)
+    
+    def test_get_correct_bbox_simple_overlap(self):
+        gt = np.asarray([[0, 0, 50, 50], [0, 0, 1000, 1000]])
+        predicted = np.asarray([[0, 0, 40, 40], [0, 0, 900, 900]])
+        
+        res_correct, res_gt, res_metrics = get_correct_bbox(gt, predicted, threshold=0.8)
+        
+        expect_correct = np.asarray([[0, 0, 900, 900]])
+        expect_gt = np.asarray([[0, 0, 1000, 1000]])
+        expec_metrics = np.asarray((1/3, 1/2, 1/2))
         
         assert_array_equal(res_correct, expect_correct)
         assert_array_equal(res_gt, expect_gt)
