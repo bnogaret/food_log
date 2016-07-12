@@ -93,13 +93,19 @@ class CnnSegmenter(BaseSegmenter):
         if predicted_index.size == 0:
             predicted_index = np.where(prob == prob.max())[0]
         
+        # image.shape : first = row (y) | second: column (x)
+        # window of cnn_bbox_coordinate : first and third: x | second and fourth: y
+        x_scale = self.image_size[1] * image.shape[1]/self.image_size[1]
+        y_scale = self.image_size[0] * image.shape[0]/self.image_size[0]
+        
         # Get the coordinate in image size
         predicted_boxed = self.cnn_bbox_coordinates[predicted_index, :]
-        predicted_boxed[:, ::2] *= image.shape[1]
-        predicted_boxed[:, 1::2] *= image.shape[0]
-        predicted_boxed = np.ceil(predicted_boxed)
+        predicted_boxed[:, 0] *= x_scale
+        predicted_boxed[:, 1] *= y_scale
+        predicted_boxed[:, 2] *= x_scale
+        predicted_boxed[:, 3] *= y_scale
         
-        # print(predicted_boxed)
+        predicted_boxed = np.ceil(predicted_boxed)
         
         # Delete possible bbox duplications
         boxes = overlapping_suppression(predicted_boxed, prob[predicted_index], self.threshold_overlap)
