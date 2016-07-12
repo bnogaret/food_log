@@ -82,8 +82,8 @@ def classify(root_directory, descriptor, classifiers, param_grid):
     data = []
     target = []
 
-    # for entry in list(os.scandir(root_directory))[0:4]:
-    for entry in os.scandir(root_directory):
+    for entry in list(os.scandir(root_directory))[0:4]:
+    # for entry in os.scandir(root_directory):
         if entry.is_dir(follow_symlinks=False):
             bb_info = []
             read_bb_info_txt(entry.path + "/bb_info.txt", bb_info)
@@ -93,8 +93,8 @@ def classify(root_directory, descriptor, classifiers, param_grid):
 
             print(label)
 
-            # for image_path in list(glob.iglob(entry.path + '/*.jpg', recursive=False))[0:40]:
-            for image_path in glob.iglob(entry.path + '/*.jpg', recursive=False):
+            for image_path in list(glob.iglob(entry.path + '/*.jpg', recursive=False))[0:40]:
+            # for image_path in glob.iglob(entry.path + '/*.jpg', recursive=False):
                 # print(image_path)
                 filename_without_jpg = int(os.path.basename(image_path).replace(".jpg", ''))
                 gt_bboxes = df.loc[df._img_name == filename_without_jpg].as_matrix(["_x1", "_y1", "_x2", "_y2"])
@@ -178,14 +178,14 @@ def main():
     }
 
     arg_feature = {
-        'hsv'   : HistogramMomentDescriptor(bin_lbp=98, bin_ch = 30, distribution='joint', scale=True),
-        'rgb'   : HistogramMomentDescriptor(bin_lbp=98, bin_ch = 100, distribution='marginal', scale=True),
+        'hsv'   : HistogramMomentDescriptor(bin_lbp=98, bin_ch = 30, distribution='joint', scale_data=True),
+        'rgb'   : HistogramMomentDescriptor(bin_lbp=98, bin_ch = 100, distribution='marginal', scale_data=True),
         'cnn'   : CnnDescriptor('fc7',
                                 const.PATH_TO_DESCRI_MODEL_DEF,
                                 const.PATH_TO_DESCRI_MODEL_WEIGHTS,
                                 const.MEAN_BGR_VALUES,
                                 const.IMAGE_SIZE,
-                                scale=False)
+                                scale_data=False)
     }
 
     arg_classifier = {
