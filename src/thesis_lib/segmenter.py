@@ -95,8 +95,8 @@ class CnnSegmenter(BaseSegmenter):
         
         # Get the coordinate in image size
         predicted_boxed = self.cnn_bbox_coordinates[predicted_index, :]
-        predicted_boxed[:, ::2] *= self.image_size[0]
-        predicted_boxed[:, 1::2] *= self.image_size[1]
+        predicted_boxed[:, ::2] *= image.shape[0]
+        predicted_boxed[:, 1::2] *= image.shape[1]
         predicted_boxed = np.ceil(predicted_boxed)
         
         # print(predicted_boxed)
