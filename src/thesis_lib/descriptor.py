@@ -231,7 +231,7 @@ class CnnDescriptor(BaseDescriptor):
             Set the mean to subtract for centering the data.
             Must be in BGR order and in [0, 255]
         image_size: array-like of 2 int
-            size of the picture
+            size of the input picture of the net
         scale_data: bool
             Whether or not scale the data in post-process
         """

@@ -55,7 +55,7 @@ class CnnSegmenter(BaseSegmenter):
             Set the mean to subtract for centering the data.
             Must be in BGR order and in [0, 255]
         image_size: array-like of 2 int
-            size of the picture
+            size of the input picture of the net
         threshold_net: float
             Threshold net value. Must be in [0, 1]
         threshold_overlap: float
