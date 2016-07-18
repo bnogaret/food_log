@@ -29,7 +29,7 @@ def main():
     
     eps = 1e-5 # to avoid 0.0 divide
     
-    for file_cm in glob.iglob(PATH_TO_PICKLE_SAVE + "/cm_CnnDescriptor_RandomForestClassifier.pk"):
+    for file_cm in glob.iglob(PATH_TO_PICKLE_SAVE + "/" + "cm_CnnSegmenter_CnnDescriptor_RandomForestClassifier.pk"):
         filename = os.path.abspath(file_cm)
         basename = os.path.basename(filename)
         print(basename)
@@ -43,12 +43,16 @@ def main():
 
             diag = np.diagonal(cm_scaled)
             
-            # Ten most accuracy score
-            for m in np.argsort(diag)[-10:]:
+            # print(diag)
+            
+            print("Overall accuracy: ", np.mean(diag))
+            
+            # Five most accuracy score
+            for m in np.argsort(diag)[-5:]:
                 print(n[m + 1], diag[m])
             
-            # Ten least accuracy score
-            for l in np.argsort(diag)[:10]:
+            # Five least accuracy score
+            for l in np.argsort(diag)[:5]:
                 print(n[l + 1], diag[l])
             
             # 10 most confused
@@ -57,6 +61,7 @@ def main():
                 i,j = np.unravel_index(cm_scaled.argmax(), cm_scaled.shape)
                 print(i, j, n[i + 1], "||", n[j + 1], cm_scaled[i, j])
                 cm_scaled[i, j] = 0.0
+
 
 if __name__ == "__main__":
     main()

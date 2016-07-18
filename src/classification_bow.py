@@ -5,8 +5,6 @@ import gc
 
 import pandas as pd
 
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import SGDClassifier
 from sklearn.svm import LinearSVC
 from sklearn.kernel_approximation import AdditiveChi2Sampler
 from sklearn.preprocessing import scale
@@ -26,7 +24,7 @@ import constants as const
 
 
 def main():
-    VOCABULARY_SIZE = 2500
+    VOCABULARY_SIZE = 1500
     STEP_SIZE = 4
     bow = BagOfWordsDescriptor(const.IMAGE_SIZE, VOCABULARY_SIZE, STEP_SIZE, scale_data=False)
 
@@ -75,10 +73,9 @@ def main():
     chi2 = AdditiveChi2Sampler(sample_steps=2)
 
     X = chi2.fit_transform(X)
-    # X = scale(X)
+    X = scale(X)
 
     print("X (type: %s) shape: %s || target (type: %s) shape: %s" % (X.dtype, X.shape, y.dtype, y.shape))
-    # classifier = RandomForestClassifier(n_estimators=500, min_samples_leaf=20, n_jobs=4)
     classifier = LinearSVC(fit_intercept=False, dual=False)
 
     print(classifier)
@@ -98,3 +95,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

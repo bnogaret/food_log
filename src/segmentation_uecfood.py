@@ -37,38 +37,45 @@ def get_gt_bbox_for_image(df, path_image):
 
 
 def segmentate(segmenter, overlap_for_correctness, root_directory, pickle_filename):
+    """
+    overlap_for_correctness: array-like of float
+    """
     df = load_object(pickle_filename)
+    metrics = np.asarray([[0.0, 0.0, 0.0]]*len(overlap_for_correctness), dtype=np.float32)
+    count = 0
     
-    for ofc in overlap_for_correctness:
-        metrics = np.asarray([0.0, 0.0, 0.0], dtype=np.float32)
-        count = 0
-        
-        # for entry in list(os.scandir(root_directory))[0:2]:
-        for entry in os.scandir(root_directory):
-            if entry.is_dir(follow_symlinks=False):
-                label = int(entry.name)
+    print(metrics.shape)
+    
+    # for entry in list(os.scandir(root_directory))[0:2]:
+    for entry in os.scandir(root_directory):
+        if entry.is_dir(follow_symlinks=False):
+            label = int(entry.name)
+            
+            print(label)
+            
+            # for path_image in list(glob.iglob(entry.path + '/*.jpg', recursive=False))[:20]:
+            for path_image in glob.iglob(entry.path + '/*.jpg', recursive=False):
+                # Retrieve ground truth bbox for the image
+                gt_bboxes = get_gt_bbox_for_image(df, path_image)
                 
-                # print(label)
+                image = imread(path_image)
                 
-                # for path_image in list(glob.iglob(entry.path + '/*.jpg', recursive=False))[:20]:
-                for path_image in glob.iglob(entry.path + '/*.jpg', recursive=False):
-                    # Retrieve ground truth bbox for the image
-                    gt_bboxes = get_gt_bbox_for_image(df, path_image)
-                    
-                    image = imread(path_image)
-                    
-                    pred_bboxes = segmenter.get_bbox(image)
-                    
-                    pred_bboxes, gt_bboxes, metric_res = get_correct_bbox(gt_bboxes, pred_bboxes, threshold=ofc)
-                    
-                    metrics += metric_res
-                    count += 1
-        
+                pred_bboxes = segmenter.get_bbox(image)
+                
+                for i, ofc in enumerate(overlap_for_correctness):
+                    _, _, metric_res = get_correct_bbox(gt_bboxes, pred_bboxes, threshold=ofc)
+                    metrics[i, :] += metric_res
+                
+                count += 1
+    
+    for i, ofc in enumerate(overlap_for_correctness):
         print("Overlap for correctness = ", ofc)
-        print("Metrics: ", metrics / count)
+        print("Metrics: ", metrics[i, :] / count)
 
 
 def main():
+    set_caffe_mode()
+    
     segmenter = CnnSegmenter(const.PATH_TO_SEG_MODEL_DEF,
                              const.PATH_TO_SEG_MODEL_WEIGHTS,
                              const.PATH_TO_SEG_BBOX,
@@ -76,8 +83,6 @@ def main():
                              const.IMAGE_SIZE,
                              0.01,
                              0.3)
-    
-    set_caffe_mode()
     
     # overlap_for_correctness = [1.0]
     overlap_for_correctness = np.arange(0.5, 1.01, 0.05)
