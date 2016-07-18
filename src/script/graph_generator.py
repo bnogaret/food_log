@@ -15,8 +15,8 @@ def argument_parser():
     parser.add_argument('-g',
                         '--graph',
                         help=('Which graph to generate: ' +
-                             '"imagenet", "segoverlap"'),
-                        choices=['imagenet','segoverlap'],
+                             '"imagenet", "segoverlap", "obesity"'),
+                        choices=['imagenet','segoverlap','obesity'],
                         default='imagenet',
                         type=str)
     args = parser.parse_args()
@@ -70,6 +70,37 @@ def graph_segmentation_overlap():
 
     plt.savefig(const.PATH_TO_IMAGE_DIR + "/segmentation_overlap.jpg")
 
+
+def graph_obesity():
+    """
+    https://www.theguardian.com/society/2015/may/05/obesity-crisis-projections-uk-2030-men-women
+    https://www.theguardian.com/news/datablog/2014/may/29/how-obese-is-the-uk-obesity-rates-compare-other-countries
+    """
+    x = np.asarray([1980, 1990, 2000, 2013, 2030])
+    # obesity: UK: increase of 12 % between 1980 and 2013 (BMI > 30)
+    obesity = np.asarray([0.14, 0.14, 0.20, 0.25, np.nan])
+    # overweight: UK: increase of 13 % between 1980 and 2013 (BMI  > 20)
+    overweight = np.asarray([0.49, 0.51, 0.59, 0.62, np.nan])
+    # prediction
+    obesity_pred = np.asarray([np.nan, np.nan, np.nan, 0.25, 0.35])
+    overweight_pred = np.asarray([np.nan, np.nan, np.nan, 0.62, 0.69])
+
+    plt.figure(figsize=(6, 6))
+    fig, ax = plt.subplots()
+    ax.plot(x, obesity, label="Obese", color='g', linewidth=2)
+    ax.plot(x, overweight, label="Overweight (include obese)", color='r', linewidth=2)
+    ax.plot(x, obesity_pred, marker='o', linestyle='--', color='g', linewidth=2)
+    ax.plot(x, overweight_pred, marker='o', linestyle='--', color='r', linewidth=2)
+    ax.set_xlim(1980, 2030)
+    ax.get_xaxis().set_major_locator(mticker.MaxNLocator(integer=True))
+    ax.get_xaxis().get_major_formatter().set_useOffset(False)
+    ax.set_ylim(0.0, 0.7)
+    plt.legend(loc=4)
+    plt.title("Obesity and overweight rates in the UK and forecast for 2030")
+
+    plt.savefig(const.PATH_TO_IMAGE_DIR + "/obesity_uk.jpg")
+
+
 def main():
     args = argument_parser()
 
@@ -79,6 +110,8 @@ def main():
         graph_imagenet()
     elif args.graph == "segoverlap":
         graph_segmentation_overlap()
+    elif args.graph == "obesity":
+        graph_obesity()
 
 if __name__ == "__main__":
     main()
