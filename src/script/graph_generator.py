@@ -83,7 +83,7 @@ def graph_joint_histogram():
     ch = ch.reshape((20, 20))
 
     cax = plt.matshow(ch, interpolation='nearest')
-    plt.title("Joint histogram for Hue and Saturation", y=1.08)
+    # plt.title("Joint histogram for Hue and Saturation", y=1.08)
 
     plt.colorbar(cax)
     plt.savefig(const.PATH_TO_IMAGE_DIR + "/joint_histogram.jpg")
