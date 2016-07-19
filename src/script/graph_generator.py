@@ -4,9 +4,12 @@ import argparse
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
+from skimage.color import rgb2hsv
+from skimage.io import imread
 
 import init_path
 import constants as const
+from thesis_lib.histogram import color_histogram
 
 
 def argument_parser():
@@ -15,8 +18,8 @@ def argument_parser():
     parser.add_argument('-g',
                         '--graph',
                         help=('Which graph to generate: ' +
-                             '"imagenet", "segoverlap", "obesity"'),
-                        choices=['imagenet','segoverlap','obesity'],
+                             '"imagenet", "segoverlap", "obesity", "jointhistogram"'),
+                        choices=['imagenet','segoverlap','obesity','jointhistogram'],
                         default='imagenet',
                         type=str)
     args = parser.parse_args()
@@ -71,6 +74,21 @@ def graph_segmentation_overlap():
     plt.savefig(const.PATH_TO_IMAGE_DIR + "/segmentation_overlap.jpg")
 
 
+def graph_joint_histogram():
+    path = const.PATH_TO_ROOT_UECFOOD256 + "/1/10.jpg"
+    image = imread(path)
+
+    hsv = rgb2hsv(image)
+    ch = color_histogram(hsv[:,:,:2], 20, ranges=((0,1),(0,1)), distribution="joint", normalization=False)
+    ch = ch.reshape((20, 20))
+
+    cax = plt.matshow(ch, interpolation='nearest')
+    plt.title("Joint histogram for Hue and Saturation", y=1.08)
+
+    plt.colorbar(cax)
+    plt.savefig(const.PATH_TO_IMAGE_DIR + "/joint_histogram.jpg")
+
+
 def graph_obesity():
     """
     https://www.theguardian.com/society/2015/may/05/obesity-crisis-projections-uk-2030-men-women
@@ -110,6 +128,8 @@ def main():
         graph_imagenet()
     elif args.graph == "segoverlap":
         graph_segmentation_overlap()
+    elif args.graph == "jointhistogram":
+        graph_joint_histogram()
     elif args.graph == "obesity":
         graph_obesity()
 
