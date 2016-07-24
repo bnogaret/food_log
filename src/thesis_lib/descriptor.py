@@ -67,8 +67,8 @@ class HistogramMomentDescriptor(BaseDescriptor):
 
     - local binary pattern histogram
     - color histogram: joint histogram on H and S channels or marginal histogram for R, G and B channels
-    - mean and var for each picture channel
-    - hu moments
+    - mean and var for each picture channel (RGB, gray, HS from HSV)
+    - 7 hu moments
 
     Post-process: scale the data (if scale_data == True)
     """
@@ -93,23 +93,31 @@ class HistogramMomentDescriptor(BaseDescriptor):
 
     def get_feature(self, image):
         gray = rgb2gray(image)
+        hsv = rgb2hsv(image)
 
         lbph = local_binary_pattern_histogram(gray, self.bin_lbp, 8)
 
         if self.distribution == "joint":
-            hsv = rgb2hsv(image)
             ch = color_histogram(hsv[:,:,:2], self.bin_ch, ranges=((0,1),(0,1)), distribution=self.distribution)
         else:
             ch = color_histogram(image, self.bin_ch, ranges=(0,1), distribution=self.distribution)
 
-        # Mean of each RGB channel
-        mean = np.mean(image, axis=(0,1))
-        # Variance of each RGB channel
-        var = np.var(image, axis=(0,1))
-
+        # Mean and variance of each RGB channel
+        mean_rgb = np.mean(image, axis=(0,1))
+        var_rgb = np.var(image, axis=(0,1))
+        
+        # Meand and var for grayscale
+        mean_gray = np.mean(gray, axis=(0,1))
+        var_gray = np.var(gray, axis=(0,1))
+        
+        # Mean and var for H and S
+        mean_hs = np.mean(hsv[:,:,:2], axis=(0,1))
+        var_hs = np.var(hsv[:,:,:2], axis=(0,1))
+        
+        # 7 Hu moments
         hu = get_hu_moment_from_image(gray)
 
-        feature = np.hstack((lbph, ch, mean, var, hu))
+        feature = np.hstack((lbph, ch, mean_rgb, var_rgb, mean_gray, var_gray, mean_hs, var_hs, hu))
 
         return feature
 
