@@ -58,7 +58,7 @@ def get_gt_bbox_for_image(df, path_image):
     return bbox.as_matrix(["_x1", "_y1", "_x2", "_y2", "_cat"])
 
 
-def segmentate_classify(segmenter, descriptor, classifier, root_directory, pickle_filename):
+def segmentate_classify(segmenter, descriptor, classifier, root_directory, pickle_filename, dataset_name):
     df = load_object(pickle_filename)
     metrics = np.asarray([0.0, 0.0, 0.0], dtype=np.float32)
     count = 0
@@ -112,7 +112,7 @@ def segmentate_classify(segmenter, descriptor, classifier, root_directory, pickl
     print("Metrics: ", metrics / count)
 
     save_object(cm,
-                "cm_" +  segmenter.__class__.__name__ + "_" + descriptor.__class__.__name__ + "_" + classifier.__class__.__name__,
+                "cm_" + dataset_name + "_" +  segmenter.__class__.__name__ + "_" + descriptor.__class__.__name__ + "_" + classifier.__class__.__name__,
                 overwrite=True)
 
 
@@ -122,8 +122,8 @@ def main():
     print(args)
     
     arg_dataset = {
-        '256'   : (const.PATH_TO_ROOT_UECFOOD256, const.PICKLE_FILENAME_256_GT_BBOX),
-        '100'   : (const.PATH_TO_ROOT_UECFOOD100, const.PICKLE_FILENAME_100_GT_BBOX),
+        '256'   : (const.PATH_TO_ROOT_UECFOOD256, const.PICKLE_FILENAME_256_GT_BBOX, "256"),
+        '100'   : (const.PATH_TO_ROOT_UECFOOD100, const.PICKLE_FILENAME_100_GT_BBOX, "100"),
     }    
     
     set_caffe_mode()
@@ -145,7 +145,7 @@ def main():
     
     classifier = RandomForestClassifier(n_estimators=500, n_jobs=2, min_samples_split=10, min_samples_leaf=10)
     
-    segmentate_classify(segmenter, descriptor, classifier, arg_dataset[args.dataset][0], arg_dataset[args.dataset][1])
+    segmentate_classify(segmenter, descriptor, classifier, arg_dataset[args.dataset][0], arg_dataset[args.dataset][1], arg_dataset[args.dataset][2])
 
 
 if __name__ == "__main__":
