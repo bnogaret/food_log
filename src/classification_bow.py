@@ -24,7 +24,7 @@ import constants as const
 
 
 def main():
-    VOCABULARY_SIZE = 1500
+    VOCABULARY_SIZE = 1000
     STEP_SIZE = 4
     bow = BagOfWordsDescriptor(const.IMAGE_SIZE, VOCABULARY_SIZE, STEP_SIZE, scale_data=False)
 
