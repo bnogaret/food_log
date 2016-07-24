@@ -43,8 +43,8 @@ def argument_parser():
                         type=float)
     parser.add_argument('-to',
                         '--threshold-overlap',
-                        help='Threshold of overlap for the non-maxima suppression (default: 0.5)',
-                        default = 0.5,
+                        help='Threshold of overlap for the non-maxima suppression (default: 0.3)',
+                        default = 0.3,
                         type=float)
     args = parser.parse_args()
     return args
@@ -126,6 +126,10 @@ def save_segmentation_image(img_name, threshold_net, threshold_overlap):
     resized_ground_truth = get_ground_truth_bbox(path_img, image.shape[0:2])
     
     resized_picture = resize(image, const.IMAGE_SIZE)
+    
+    # Resize the prediction
+    predicted_boxes = get_coordinate_resized_rectangles(image.shape[0:2], const.IMAGE_SIZE, predicted_boxes)
+    boxes = get_coordinate_resized_rectangles(image.shape[0:2], const.IMAGE_SIZE, boxes)
     
     fig = plt.figure(figsize=(6, 14))
 
