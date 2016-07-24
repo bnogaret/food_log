@@ -19,6 +19,8 @@ class GetGroundTruthBboxTest(unittest.TestCase):
     def test_simple_overlap(self):
         # Check right number of bbox
         self.assertEqual(self.df.shape, (31645, 8))
+        # Number of different files
+        self.assertEqual(len(self.df._abs_path.unique()), 31395)
         # Check right number of different category
         self.assertEqual(len(self.df._cat.unique()), 256)
         # Check all the values are assigned
