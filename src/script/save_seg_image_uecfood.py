@@ -149,6 +149,24 @@ def save_segmentation_image(img_name, threshold_net, threshold_overlap):
     ax.set_title("Predicted boxes after selection")
 
     plt.savefig(const.PATH_TO_IMAGE_DIR + "/seg_" + str(img_name) + ".jpg")
+    
+    # Draw the 100 possible boxes on the pictures
+    gt_100 = np.loadtxt(const.PATH_TO_SEG_BBOX,
+                        np.float,
+                        delimiter=',')
+    
+    x_scale = const.IMAGE_SIZE[1] * resized_picture.shape[1]/const.IMAGE_SIZE[1]
+    y_scale = const.IMAGE_SIZE[0] * resized_picture.shape[0]/const.IMAGE_SIZE[0]
+    
+    # Get the coordinate in image size
+    gt_100[:, 0] *= x_scale
+    gt_100[:, 1] *= y_scale
+    gt_100[:, 2] *= x_scale
+    gt_100[:, 3] *= y_scale
+    
+    plt.figure()
+    plt.imshow(draw_bounding_boxes(resized_picture, gt_100, color=0, copy=True))
+    plt.savefig(const.PATH_TO_IMAGE_DIR + "/bb_100_" + str(img_name) + ".jpg")
 
 
 if __name__ == "__main__":
