@@ -99,6 +99,19 @@ def read_bb_info_txt(path, array):
 def get_multiple_food_image(root_path):
     """
     Parse the multiple_food.txt file and return a dataframe corresponding to it.
+    
+    Parameters
+    ----------
+    root_path: str
+        Path to the UECFOOD 256 or 100 root directory
+    
+    Returns
+    -------
+    :class:`pandas.Dataframe`
+        A pandas dataframe with:
+
+        - '_img_name' (str): filename of the image
+        - '_cat' (int): category
     """
     
     data = []
