@@ -1,4 +1,7 @@
-Master thesis project.
+Master thesis project at Cranfield University in 2016.
+The goal is to localise and recognise food items on a picture. Combination of image processing and machine learning.
+
+To get more information on previous work, the methodology or the results, see my thesis report in the sub-directory **thesis**.
 
 ## Installation
 
@@ -30,8 +33,9 @@ Install:
     pip install -r requirements.txt
     ```
 - Download and unzip in /data/ directory [UEC FOOD256](http://foodcam.mobi/dataset256.html) and/or [UEC FOOD100](http://foodcam.mobi/dataset100.html).
+_See section 5 of my thesis report for the reasons behind this dataset choice_.
 
-    :warning: **Be careful, I have modified added / modified some files from these archives.**
+    :warning: **Be careful, I have modified added / modified some files from these archives (they are included in the repo).**
 
 ## Tests
 
