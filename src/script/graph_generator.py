@@ -41,7 +41,7 @@ def graph_imagenet():
     ax.get_xaxis().set_major_locator(mticker.MaxNLocator(integer=True))
     ax.get_xaxis().get_major_formatter().set_useOffset(False)
     plt.legend()
-    plt.title("Image Net's error result")
+    # plt.title("Image Net's error result")
 
     plt.savefig(const.PATH_TO_IMAGE_DIR + "/imagenet.jpg")
 
@@ -114,7 +114,7 @@ def graph_obesity():
     ax.get_xaxis().get_major_formatter().set_useOffset(False)
     ax.set_ylim(0.0, 0.7)
     plt.legend(loc=4)
-    plt.title("Obesity and overweight rates in the UK and forecast for 2030")
+    # plt.title("Obesity and overweight rates in the UK and forecast for 2030")
 
     plt.savefig(const.PATH_TO_IMAGE_DIR + "/obesity_uk.jpg")
 
